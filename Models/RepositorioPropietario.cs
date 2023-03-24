@@ -7,16 +7,74 @@ public class RepositorioPropietario
 
 	public RepositorioPropietario() {}
 
-	// public int Alta(Propietario propietario)
-	// {
-	// 	int red = 0;
-	// 	using (MySqlConnection connection = new MySqlConnection(connectionString))
-	// 	{
-	// 		string query = @"INSERT INTO propietarios (dni, apellido, nombre, telefono, correo)
-	// 		VALUES (@dni, @apellido, @nombre, @telefono, @correo);
-	// 		SELECT LAST_INSERT_ID();";
-	// 	}
-	// }
+	public int Alta(Propietario propietario)
+	{
+		int res = 0;
+		using (MySqlConnection connection = new MySqlConnection(connectionString))
+		{
+			string query = @"INSERT INTO propietarios (dni, apellido, nombre, telefono, correo)
+			VALUES (@dni, @apellido, @nombre, @telefono, @correo);
+			SELECT LAST_INSERT_ID();";
+
+			using (var command = new MySqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@dni", propietario.Dni);
+				command.Parameters.AddWithValue("@apellido", propietario.Apellido);
+				command.Parameters.AddWithValue("@nombre", propietario.Nombre);
+				command.Parameters.AddWithValue("@telefono", propietario.Telefono);
+				command.Parameters.AddWithValue("@correo", propietario.Correo);
+				connection.Open();
+				res = Convert.ToInt32(command.ExecuteScalar());
+				propietario.IdPropietario = res;
+				connection.Close();
+			}
+		}
+
+		return res;
+	}
+
+	public int Eliminar(int id)
+	{
+		int res = 0;
+		using (MySqlConnection connection = new MySqlConnection(connectionString))
+		{
+			var query = @"DELETE FROM propietarios WHERE id_propietario = @id;";
+
+			using (var command = new MySqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@id", id);
+				connection.Open();
+				res = command.ExecuteNonQuery();
+				connection.Close();
+			}
+		}
+		return res;
+	}
+
+	public int Modificar(Propietario propietario)
+	{
+		int res = 0;
+		using (MySqlConnection connection = new MySqlConnection(connectionString))
+		{
+			var query = @"UPDATE propietarios SET dni = @dni, apellido = @apellido, nombre = @nombre, telefono = @telefono, correo = @correo
+			WHERE id_propietario = @id;";
+
+			using (var command = new MySqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@id", propietario.IdPropietario);
+				command.Parameters.AddWithValue("@dni", propietario.Dni);
+				command.Parameters.AddWithValue("@apellido", propietario.Apellido);
+				command.Parameters.AddWithValue("@nombre", propietario.Nombre);
+				command.Parameters.AddWithValue("@telefono", propietario.Telefono);
+				command.Parameters.AddWithValue("@correo", propietario.Correo);
+				connection.Open();
+				res = command.ExecuteNonQuery();
+				connection.Close();
+			}
+		}
+		return res;
+	}
+	
 
 	public List<Propietario> GetPropietarios()
 	{
@@ -50,5 +108,40 @@ public class RepositorioPropietario
 			connection.Close();
 		}
 		return propietarios;
+	}
+
+	public Propietario? GetPropietarioPorId(int id)
+	{
+		Propietario? propietario = null;
+		using (MySqlConnection connection = new MySqlConnection(connectionString))
+		{
+			var query = @"SELECT id_propietario, dni, apellido, nombre, telefono, correo
+			FROM propietarios
+			WHERE id_propietario = @id;";
+
+			using (var command = new MySqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@id", id);
+				connection.Open();
+				using (var reader = command.ExecuteReader())
+				{
+					if (reader.Read())
+					{
+						var correo = reader["correo"];
+						propietario = new Propietario
+						{
+							IdPropietario = reader.GetInt32("id_propietario"),
+							Dni           = reader.GetString("dni"),
+							Apellido      = reader.GetString("apellido"),
+							Nombre        = reader.GetString("nombre"),
+							Telefono      = reader.GetString("telefono"),
+							Correo        = correo == DBNull.Value ? null : correo.ToString()
+						};
+					}
+				}
+			}
+				connection.Close();
+		}
+		return propietario;
 	}
 }
