@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Inmobiliaria.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,16 +10,24 @@ namespace Inmobiliaria.Controllers
 {
 	public class InquilinosController : Controller
 	{
+		private readonly RepositorioInquilino Repo;
+
+		public InquilinosController()
+		{
+			Repo = new RepositorioInquilino();
+		}
 		// GET: Inquilinos
 		public ActionResult Index()
 		{
-			return View();
+			var lista = Repo.GetInquilinos();
+			return View(lista);
 		}
 
 		// GET: Inquilinos/Details/5
 		public ActionResult Details(int id)
 		{
-			return View();
+			var inquilino = Repo.GetInquilinoPorId(id);
+			return View(inquilino);
 		}
 
 		// GET: Inquilinos/Create
@@ -30,12 +39,11 @@ namespace Inmobiliaria.Controllers
 		// POST: Inquilinos/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Create(IFormCollection collection)
+		public ActionResult Create(Inquilino inquilino)
 		{
 			try
 			{
-				// TODO: Add insert logic here
-
+				Repo.Alta(inquilino);
 				return RedirectToAction(nameof(Index));
 			}
 			catch
@@ -47,18 +55,18 @@ namespace Inmobiliaria.Controllers
 		// GET: Inquilinos/Edit/5
 		public ActionResult Edit(int id)
 		{
-			return View();
+			var inquilino = Repo.GetInquilinoPorId(id);
+			return View(inquilino);
 		}
 
 		// POST: Inquilinos/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Edit(int id, IFormCollection collection)
+		public ActionResult Edit(int id, Inquilino inquilino)
 		{
 			try
 			{
-				// TODO: Add update logic here
-
+				Repo.Modificar(inquilino);
 				return RedirectToAction(nameof(Index));
 			}
 			catch
@@ -70,7 +78,8 @@ namespace Inmobiliaria.Controllers
 		// GET: Inquilinos/Delete/5
 		public ActionResult Delete(int id)
 		{
-			return View();
+			var inquilino = Repo.GetInquilinoPorId(id);
+			return View(inquilino);
 		}
 
 		// POST: Inquilinos/Delete/5
@@ -80,13 +89,12 @@ namespace Inmobiliaria.Controllers
 		{
 			try
 			{
-				// TODO: Add delete logic here
-
+				Repo.Eliminar(id);
 				return RedirectToAction(nameof(Index));
 			}
 			catch
 			{
-				return View();
+				throw;
 			}
 		}
 	}
