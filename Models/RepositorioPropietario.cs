@@ -140,7 +140,7 @@ public class RepositorioPropietario
 					}
 				}
 			}
-				connection.Close();
+			connection.Close();
 		}
 		return propietario;
 	}
