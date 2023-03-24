@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Inmobiliaria.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +26,8 @@ namespace Inmobiliaria.Controllers
 		// GET: Propietarios/Details/5
 		public ActionResult Details(int id)
 		{
-			return View();
+			var propietario = Repo.GetPropietarioPorId(id);
+			return View(propietario);
 		}
 
 		// GET: Propietarios/Create
@@ -37,12 +39,11 @@ namespace Inmobiliaria.Controllers
 		// POST: Propietarios/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Create(IFormCollection collection)
+		public ActionResult Create(Propietario propietario)
 		{
 			try
 			{
-				// TODO: Add insert logic here
-
+				Repo.Alta(propietario);
 				return RedirectToAction(nameof(Index));
 			}
 			catch
@@ -54,18 +55,18 @@ namespace Inmobiliaria.Controllers
 		// GET: Propietarios/Edit/5
 		public ActionResult Edit(int id)
 		{
-			return View();
+			var propietario = Repo.GetPropietarioPorId(id);
+			return View(propietario);
 		}
 
 		// POST: Propietarios/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Edit(int id, IFormCollection collection)
+		public ActionResult Edit(int id, Propietario propietario)
 		{
 			try
 			{
-				// TODO: Add update logic here
-
+				Repo.Modificar(propietario);
 				return RedirectToAction(nameof(Index));
 			}
 			catch
@@ -77,7 +78,8 @@ namespace Inmobiliaria.Controllers
 		// GET: Propietarios/Delete/5
 		public ActionResult Delete(int id)
 		{
-			return View();
+			var propietario = Repo.GetPropietarioPorId(id);
+			return View(propietario);
 		}
 
 		// POST: Propietarios/Delete/5
@@ -87,13 +89,12 @@ namespace Inmobiliaria.Controllers
 		{
 			try
 			{
-				// TODO: Add delete logic here
-
+				Repo.Eliminar(id);
 				return RedirectToAction(nameof(Index));
 			}
 			catch
 			{
-				return View();
+				throw;
 			}
 		}
 	}

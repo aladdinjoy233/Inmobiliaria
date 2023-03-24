@@ -1,20 +1,18 @@
 @model IEnumerable<Inmobiliaria.Models.Propietario>
 
 @{
-	ViewData["Title"] = "Index";
+	ViewData["Title"] = "Propietarios";
 }
 
-<h1>Index</h1>
 
-<p>
-	<a asp-action="Create">Create New</a>
-</p>
+<div class="d-flex align-items-center justify-content-between">
+	<h1>Propietarios</h1>
+	<a asp-action="Create" class="btn btn-sm btn-primary">Crear Nuevo</a>
+</div>
+
 <table class="table">
 	<thead>
 		<tr>
-			<th>
-				@Html.DisplayNameFor(model => model.IdPropietario)
-			</th>
 			<th>
 				@Html.DisplayNameFor(model => model.Dni)
 			</th>
@@ -30,16 +28,15 @@
 			<th>
 				@Html.DisplayNameFor(model => model.Correo)
 			</th>
-			<th></th>
+			<th>
+				Acciones
+			</th>
 		</tr>
 	</thead>
 	<tbody>
 		@foreach (var item in Model)
 		{
 			<tr>
-				<td>
-					@Html.DisplayFor(modelItem => item.IdPropietario)
-				</td>
 				<td>
 					@Html.DisplayFor(modelItem => item.Dni)
 				</td>
@@ -56,9 +53,15 @@
 					@Html.DisplayFor(modelItem => item.Correo)
 				</td>
 				<td>
-					@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-					@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-					@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+					<a href='@Url.Action("Edit", new { id = item.IdPropietario })' class="btn btn-sm btn-light">
+						<i class="fa-solid fa-pencil"></i>
+					</a>
+					<a href='@Url.Action("Details", new { id = item.IdPropietario })' class="btn btn-sm btn-light">
+						<i class="fa-solid fa-circle-info"></i>
+					</a>
+					<a href='@Url.Action("Delete", new { id = item.IdPropietario })' class="btn btn-sm btn-light">
+						<i class="fa-solid fa-trash"></i>
+					</a>
 				</td>
 			</tr>
 		}
