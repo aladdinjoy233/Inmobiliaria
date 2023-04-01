@@ -1,0 +1,92 @@
+@model IEnumerable<Inmobiliaria.Models.Inmueble>
+
+@{
+	ViewData["Title"] = "Inmuebles";
+}
+
+<div class="d-flex align-items-center justify-content-between">
+	<h1>Inmuebles</h1>
+	<a asp-action="Create" class="btn btn-sm btn-primary">Crear Nuevo</a>
+</div>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Direccion)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Uso)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Tipo)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Ambientes)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Latitud)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Longitud)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Precio)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Propietario)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Activo)
+			</th>
+			<th>
+				Acciones
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Direccion)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Uso)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Tipo)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Ambientes)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Latitud)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Longitud)
+				</td>
+				<td>
+					$@Html.DisplayFor(modelItem => item.Precio)
+				</td>
+				<td>
+					@(item.Propietario!.ToString())
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Activo)
+				</td>
+				<td>
+					<a href='@Url.Action("Edit", new { id = item.IdInmueble })' class="btn btn-sm btn-light">
+						<i class="fa-solid fa-pencil"></i>
+					</a>
+					<a href='@Url.Action("Details", new { id = item.IdInmueble })' class="btn btn-sm btn-light">
+						<i class="fa-solid fa-circle-info"></i>
+					</a>
+					<a href='@Url.Action("Delete", new { id = item.IdInmueble })' class="btn btn-sm btn-light">
+						<i class="fa-solid fa-trash"></i>
+					</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
