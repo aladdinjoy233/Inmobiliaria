@@ -1,0 +1,68 @@
+@model IEnumerable<Inmobiliaria.Models.Contrato>
+
+@{
+	ViewData["Title"] = "Contratos";
+}
+
+<div class="d-flex align-items-center justify-content-between">
+	<h1>Contratos</h1>
+	<a asp-action="Create" class="btn btn-sm btn-primary">Crear Nuevo</a>
+</div>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Inmueble)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Inquilino)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.FechaInicio)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.FechaFin)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.MontoMensual)
+			</th>
+			<th>
+				Acciones
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@(item.Inmueble!.Direccion)
+				</td>
+				<td>
+					@(item.Inquilino!.ToString())
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.FechaInicio)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.FechaFin)
+				</td>
+				<td>
+					$@Html.DisplayFor(modelItem => item.MontoMensual)
+				</td>
+				<td>
+					<a href='@Url.Action("Edit", new { id = item.IdContrato })' class="btn btn-sm btn-light">
+						<i class="fa-solid fa-pencil"></i>
+					</a>
+					<a href='@Url.Action("Details", new { id = item.IdContrato })' class="btn btn-sm btn-light">
+						<i class="fa-solid fa-circle-info"></i>
+					</a>
+					<a href='@Url.Action("Delete", new { id = item.IdContrato })' class="btn btn-sm btn-light">
+						<i class="fa-solid fa-trash"></i>
+					</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
