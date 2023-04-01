@@ -6,11 +6,11 @@ public class Contrato
 {
 	public int IdContrato { get; set; }
 	
-	public int ? InmuebleId { get; set; }
+	public int InmuebleId { get; set; }
 	
 	public Inmueble ? Inmueble { get; set; }
 	
-	public int ? InquilinoId { get; set; }
+	public int InquilinoId { get; set; }
 	
 	public Inquilino ? Inquilino { get; set; }
 	

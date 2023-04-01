@@ -123,9 +123,9 @@ public class RepositorioContrato
 		return contratos;
 	}
 
-	public Contrato? GetContratoPorId(int id)
+	public Contrato GetContratoPorId(int id)
 	{
-		Contrato? contrato = null;
+		Contrato contrato = new Contrato();
 		using (MySqlConnection connection = new MySqlConnection(connectionString))
 		{
 			var query = @"SELECT id_contrato, c.id_inmueble, c.id_inquilino, fecha_inicio, fecha_fin, monto_mensual, i.direccion, iq.nombre, iq.apellido

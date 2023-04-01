@@ -13,12 +13,14 @@ namespace Inmobiliaria.Controllers
 		private readonly RepositorioContrato Repo;
 		private readonly RepositorioInmueble RepoInmueble;
 		private readonly RepositorioInquilino RepoInquilino;
+		private readonly RepositorioPropietario RepoPropietario;
 
 		public ContratosController()
 		{
 			Repo = new RepositorioContrato();
 			RepoInmueble = new RepositorioInmueble();
 			RepoInquilino = new RepositorioInquilino();
+			RepoPropietario = new RepositorioPropietario();
 		}
 
 		// GET: Contratos
@@ -31,7 +33,9 @@ namespace Inmobiliaria.Controllers
 		// GET: Contratos/Details/5
 		public ActionResult Details(int id)
 		{
-			return View();
+			var contrato = Repo.GetContratoPorId(id);
+			contrato.Inmueble = RepoInmueble.GetInmueblePorId(contrato.InmuebleId);
+			return View(contrato);
 		}
 
 		// GET: Contratos/Create
@@ -68,7 +72,10 @@ namespace Inmobiliaria.Controllers
 		// GET: Contratos/Edit/5
 		public ActionResult Edit(int id)
 		{
-			return View();
+			ViewBag.Inmuebles = RepoInmueble.GetInmuebles();
+			ViewBag.Inquilinos = RepoInquilino.GetInquilinos();
+			var contrato = Repo.GetContratoPorId(id);
+			return View(contrato);
 		}
 
 		// POST: Contratos/Edit/5
@@ -78,20 +85,22 @@ namespace Inmobiliaria.Controllers
 		{
 			try
 			{
-				// TODO: Add update logic here
-
+				contrato.IdContrato = id;
+				Repo.Modificar(contrato);
 				return RedirectToAction(nameof(Index));
 			}
 			catch
 			{
-				return View();
+				throw;
 			}
 		}
 
 		// GET: Contratos/Delete/5
 		public ActionResult Delete(int id)
 		{
-			return View();
+			var contrato = Repo.GetContratoPorId(id);
+			contrato.Inmueble = RepoInmueble.GetInmueblePorId(contrato.InmuebleId);
+			return View(contrato);
 		}
 
 		// POST: Contratos/Delete/5
@@ -101,8 +110,7 @@ namespace Inmobiliaria.Controllers
 		{
 			try
 			{
-				// TODO: Add delete logic here
-
+				Repo.Eliminar(id);
 				return RedirectToAction(nameof(Index));
 			}
 			catch
