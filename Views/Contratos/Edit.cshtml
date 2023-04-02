@@ -4,6 +4,7 @@
 	ViewData["Title"] = "Editar";
 	var listaInmuebles = (IList<Inmueble>)ViewBag.Inmuebles;
 	var listaInquilinos = (IList<Inquilino>)ViewBag.Inquilinos;
+	var inmuebleActual = (Inmueble)ViewBag.InmuebleActual;
 }
 
 <a asp-action="Index" class="btn btn-sm btn-light">
@@ -22,10 +23,14 @@
 			<div class="form-group">
 				<label class="control-label">Inmueble</label>
 				<select class="form-control" name="InmuebleId">
-					<option value="null" disabled selected>Seleccione un inmueble</option>
+					<option value="null" disabled>Seleccione un inmueble</option>
+					<option value="@inmuebleActual.IdInmueble" selected>@(inmuebleActual.Direccion)</option>
 					@foreach (var item in listaInmuebles)
 					{
-						@:<option @(item.IdInmueble == Model.InmuebleId ? "selected" : "") value="@item.IdInmueble">@(item.Direccion)</option>
+						@if (item.IdInmueble != inmuebleActual.IdInmueble)
+						{
+							@:<option value="@item.IdInmueble">@(item.Direccion)</option>
+						}
 					}
 				</select>
 				<span asp-validation-for="InmuebleId" class="text-danger"></span>

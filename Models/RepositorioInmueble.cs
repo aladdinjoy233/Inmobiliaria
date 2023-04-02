@@ -132,6 +132,53 @@ public class RepositorioInmueble
 		return inmuebles;
 	}
 
+	public List<Inmueble> GetInmueblesParaAlquilar()
+	{
+		List<Inmueble> inmuebles = new List<Inmueble>();
+		using (MySqlConnection connection = new MySqlConnection(connectionString))
+		{
+			var query = @"SELECT i.id_inmueble, i.id_propietario, i.direccion, i.uso, i.tipo, i.ambientes, i.latitud, i.longitud, i.precio, i.activo, p.nombre, p.apellido
+			FROM inmuebles i
+			INNER JOIN propietarios p ON i.id_propietario = p.id_propietario
+			LEFT JOIN contratos c ON i.id_inmueble = c.id_inmueble
+			WHERE i.activo = TRUE
+			AND c.id_contrato IS NULL;";
+
+			using (var command = new MySqlCommand(query, connection))
+			{
+				connection.Open();
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						Inmueble inmueble = new Inmueble
+						{
+							IdInmueble = reader.GetInt32("id_inmueble"),
+							PropietarioId = reader.GetInt32("id_propietario"),
+							Propietario = new Propietario
+							{
+								IdPropietario = reader.GetInt32("id_propietario"),
+								Nombre = reader.GetString("nombre"),
+								Apellido = reader.GetString("apellido")
+							},
+							Direccion = reader.GetString("direccion"),
+							Uso = reader.GetString("uso"),
+							Tipo = reader.GetString("tipo"),
+							Ambientes = reader.GetInt32("ambientes"),
+							Latitud = reader.GetDecimal("latitud"),
+							Longitud = reader.GetDecimal("longitud"),
+							Precio = reader.GetDecimal("precio"),
+							Activo = reader.GetBoolean("activo")
+						};
+						inmuebles.Add(inmueble);
+					}
+				}
+			}
+			connection.Close();
+		}
+		return inmuebles;
+	}
+
 	public Inmueble? GetInmueblePorId(int id)
 	{
 		Inmueble? inmueble = null;

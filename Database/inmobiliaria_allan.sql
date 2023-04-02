@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 03, 2023 at 01:07 AM
+-- Generation Time: Apr 03, 2023 at 01:38 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -67,7 +67,9 @@ CREATE TABLE `inmuebles` (
 --
 
 INSERT INTO `inmuebles` (`id_inmueble`, `id_propietario`, `direccion`, `uso`, `tipo`, `ambientes`, `latitud`, `longitud`, `precio`, `activo`) VALUES
-(1, 1, 'Por alla', 'Hogar', 'Casa', 5, '10', '10', '5000', 1);
+(1, 1, 'Por alla', 'Hogar', 'Casa', 5, '10', '10', '5000', 1),
+(4, 6, 'testeando', 'test no activo', 'test', 5, '5', '5', '500', 0),
+(5, 6, 'testando II', 'teat si activo', 'test', 5, '5', '5', '5000', 1);
 
 -- --------------------------------------------------------
 
@@ -165,7 +167,7 @@ ALTER TABLE `contratos`
 -- AUTO_INCREMENT for table `inmuebles`
 --
 ALTER TABLE `inmuebles`
-  MODIFY `id_inmueble` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_inmueble` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `inquilinos`

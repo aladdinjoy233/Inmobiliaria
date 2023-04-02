@@ -43,7 +43,7 @@ namespace Inmobiliaria.Controllers
 		{
 			try
 			{
-				ViewBag.Inmuebles = RepoInmueble.GetInmuebles();
+				ViewBag.Inmuebles = RepoInmueble.GetInmueblesParaAlquilar();
 				ViewBag.Inquilinos = RepoInquilino.GetInquilinos();
 				return View();
 			}
@@ -72,9 +72,10 @@ namespace Inmobiliaria.Controllers
 		// GET: Contratos/Edit/5
 		public ActionResult Edit(int id)
 		{
-			ViewBag.Inmuebles = RepoInmueble.GetInmuebles();
+			ViewBag.Inmuebles = RepoInmueble.GetInmueblesParaAlquilar();
 			ViewBag.Inquilinos = RepoInquilino.GetInquilinos();
 			var contrato = Repo.GetContratoPorId(id);
+			ViewBag.InmuebleActual = RepoInmueble.GetInmueblePorId(contrato.InmuebleId);
 			return View(contrato);
 		}
 
