@@ -1,0 +1,67 @@
+@{
+	var inputId = Model.InputId;
+	var searchInput = Model.InputId + "Search";
+	var searchUrl = Model.SearchUrl;
+	var inputLabel = Model.InputId.Replace("Id", "") + "s";
+	var searchResultsDivId = "searchResults" + inputLabel;
+
+	// JS Variable names
+	var SearchUrl = inputLabel + "SearchUrl";
+	var IdInput = inputLabel + "InputId";
+	var SearchInput = inputLabel + "SearchInput";
+	var InputSearchResults = inputLabel + "SearchResults";
+	var ShouldRemoveDiv = inputLabel + "ShouldRemoveDiv";
+}
+
+<div class="form-group position-relative">
+	<label for="@searchInput" class="control-label">@inputLabel</label>
+	<input type="hidden" id="@inputId" name="@inputId">
+	<input type="text" id='@searchInput' name="@searchInput" placeholder="Buscar..." class="form-control" autocomplete="off">
+	<div id="@searchResultsDivId" class="search-results"></div>
+</div>
+
+<script>
+	const @SearchUrl = '@searchUrl';
+	const @IdInput = document.querySelector('#@inputId');
+	const @SearchInput = document.querySelector('#@searchInput');
+	const @InputSearchResults = document.querySelector('#@searchResultsDivId');
+
+	let @ShouldRemoveDiv = true;
+
+	@(SearchInput).addEventListener('keyup', e => {
+		const query = @(SearchInput).value.trim();
+
+		if (query == '') {
+			@(InputSearchResults).innerHTML = "";
+			return;
+		}
+
+		fetch(`${@SearchUrl}?searchTerm=${query}`)
+			.then(res => res.json())
+			.then(data => {
+				@(InputSearchResults).innerHTML = "";
+
+				for (let result of data) {
+					let suggestion = document.createElement('div');
+
+					suggestion.innerText = result.outputString;
+					suggestion.addEventListener('click', e => {
+						e.stopPropagation();
+						@(IdInput).value = result.id;
+						@(SearchInput).value = result.outputString;
+						@(InputSearchResults).innerHTML = "";
+					});
+
+					@(InputSearchResults).appendChild(suggestion);
+				}
+			})
+			.catch(err => console.log(err));
+	})
+
+	@(SearchInput).addEventListener('blur', e => {
+		if (!@(ShouldRemoveDiv)) return;
+		@(InputSearchResults).innerHTML = "";
+	});
+
+	document.addEventListener('mousedown', e => @(ShouldRemoveDiv) = !@(InputSearchResults).contains(e.target));
+</script>

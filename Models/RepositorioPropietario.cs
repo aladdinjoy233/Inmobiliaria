@@ -144,4 +144,36 @@ public class RepositorioPropietario
 		}
 		return propietario;
 	}
+
+	public List<object> Buscar(string searchQuery)
+	{
+		var result = new List<object>();
+
+		using (MySqlConnection connection = new MySqlConnection(connectionString))
+		{
+			var query = @"SELECT id_propietario, nombre, apellido, dni
+			FROM propietarios
+			WHERE CONCAT(nombre, ' ', apellido) LIKE @searchQuery
+			OR dni LIKE @searchQuery;";
+
+			using (var command = new MySqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@searchQuery", $"%{searchQuery}%");
+				connection.Open();
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						var nombre = reader.GetString("nombre");
+						var apellido = reader.GetString("apellido");
+						var dni = reader.GetString("dni");
+						var outputString = $"{nombre} {apellido} ({dni})";
+						result.Add(new { outputString, id = reader.GetInt32("id_propietario") });
+					}
+				}
+			}
+			connection.Close();
+		}
+		return result;
+	}
 }

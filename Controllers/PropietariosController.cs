@@ -97,5 +97,12 @@ namespace Inmobiliaria.Controllers
 				throw;
 			}
 		}
+
+		// GET: Propietarios/Buscar
+		public JsonResult Buscar(string searchTerm)
+		{
+			var res = Repo.Buscar(searchTerm);
+			return Json(res);
+		}
 	}
 }
