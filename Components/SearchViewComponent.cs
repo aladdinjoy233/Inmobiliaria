@@ -5,9 +5,9 @@ namespace Inmobiliaria.Components
 {
 	public class SearchViewComponent : ViewComponent
 	{
-		public async Task<IViewComponentResult> InvokeAsync(string searchUrl, string inputId)
+		public IViewComponentResult Invoke(string searchUrl, string inputId, object selected)
 		{
-			return View(new { SearchUrl = searchUrl, InputId = inputId });
+			return View(new { SearchUrl = searchUrl, InputId = inputId, Selected = selected });
 		}
 	}
 }

@@ -3,6 +3,13 @@
 @{
 	ViewData["Title"] = "Editar";
 	var listaPropietarios = (IList<Propietario>)ViewBag.Propietarios;
+
+	var outputStringPropietario = $"{Model.Propietario.Nombre} {Model.Propietario.Apellido} ({Model.Propietario.Dni})";
+	var selectedPropietario = new SelectedInfo
+	{
+		Id = Model.PropietarioId ?? 0,
+		OutputString = outputStringPropietario
+	};
 }
 
 <a asp-action="Index" class="btn btn-sm btn-light">
@@ -18,17 +25,7 @@
 		<form asp-action="Edit">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 			@Html.HiddenFor(model => model.IdInmueble)
-			<div class="form-group">
-				<label class="control-label">Popietario</label>
-				<select class="form-control" name="PropietarioId">
-					<option value="null" disabled selected>Seleccione un propietario</option>
-					@foreach (var item in listaPropietarios)
-					{
-						@:<option @(item.IdPropietario == Model.PropietarioId ? "selected" : "") value="@item.IdPropietario">@(item.ToString())</option>
-					}
-				</select>
-				<span asp-validation-for="PropietarioId" class="text-danger"></span>
-			</div>
+			@await Component.InvokeAsync("Search", new { searchUrl = Url.Action("Buscar", "Propietarios"), inputId = "PropietarioId", selected = selectedPropietario })
 			<div class="form-group">
 				<label asp-for="Direccion" class="control-label"></label>
 				<input asp-for="Direccion" class="form-control" />

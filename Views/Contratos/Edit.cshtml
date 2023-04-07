@@ -5,6 +5,20 @@
 	var listaInmuebles = (IList<Inmueble>)ViewBag.Inmuebles;
 	var listaInquilinos = (IList<Inquilino>)ViewBag.Inquilinos;
 	var inmuebleActual = (Inmueble)ViewBag.InmuebleActual;
+
+	var outputStringInmueble = $"{Model.Inmueble.Direccion} ({Model.Inmueble.Tipo}) - ${Model.Inmueble.Precio}";
+	var selectedInmueble = new SelectedInfo
+	{
+		Id = Model.InmuebleId,
+		OutputString = outputStringInmueble
+	};
+
+	var outputStringInquilino = $"{Model.Inquilino.Nombre} {Model.Inquilino.Apellido} ({Model.Inquilino.Dni})";
+	var selectedInquilino = new SelectedInfo
+	{
+		Id = Model.InquilinoId,
+		OutputString = outputStringInquilino
+	};
 }
 
 <a asp-action="Index" class="btn btn-sm btn-light">
@@ -20,32 +34,9 @@
 		<form asp-action="Edit">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 			@Html.HiddenFor(model => model.IdContrato)
-			<div class="form-group">
-				<label class="control-label">Inmueble</label>
-				<select class="form-control" name="InmuebleId">
-					<option value="null" disabled>Seleccione un inmueble</option>
-					<option value="@inmuebleActual.IdInmueble" selected>@(inmuebleActual.Direccion)</option>
-					@foreach (var item in listaInmuebles)
-					{
-						@if (item.IdInmueble != inmuebleActual.IdInmueble)
-						{
-							@:<option value="@item.IdInmueble">@(item.Direccion)</option>
-						}
-					}
-				</select>
-				<span asp-validation-for="InmuebleId" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label class="control-label">Inquilino</label>
-				<select class="form-control" name="InquilinoId">
-					<option value="null" disabled selected>Seleccione un inmueble</option>
-					@foreach (var item in listaInquilinos)
-					{
-						@:<option @(item.IdInquilino == Model.InquilinoId ? "selected" : "") value="@item.IdInquilino">@(item.ToString())</option>
-					}
-				</select>
-				<span asp-validation-for="InquilinoId" class="text-danger"></span>
-			</div>
+			@await Component.InvokeAsync("Search", new { searchUrl = Url.Action("Buscar", "Inmuebles"), inputId = "InmuebleId", selected = selectedInmueble })
+			@await Component.InvokeAsync("Search", new { searchUrl = Url.Action("Buscar", "Inquilinos"), inputId = "InquilinoId", selected = selectedInquilino })
+
 			<div class="form-group">
 				<label asp-for="FechaInicio" class="control-label"></label>
 				<input asp-for="FechaInicio" type="date" class="form-control" />

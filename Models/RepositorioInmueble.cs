@@ -184,7 +184,7 @@ public class RepositorioInmueble
 		Inmueble? inmueble = null;
 		using (MySqlConnection connection = new MySqlConnection(connectionString))
 		{
-			var query = @"SELECT id_inmueble, i.id_propietario, direccion, uso, tipo, ambientes, latitud, longitud, precio, activo, p.nombre, p.apellido
+			var query = @"SELECT id_inmueble, i.id_propietario, direccion, uso, tipo, ambientes, latitud, longitud, precio, activo, p.nombre, p.apellido, p.dni
 			FROM inmuebles i
 			INNER JOIN propietarios p ON i.id_propietario = p.id_propietario
 			WHERE id_inmueble = @id;";
@@ -205,7 +205,8 @@ public class RepositorioInmueble
 							{
 								IdPropietario = reader.GetInt32("id_propietario"),
 								Nombre = reader.GetString("nombre"),
-								Apellido = reader.GetString("apellido")
+								Apellido = reader.GetString("apellido"),
+								Dni = reader.GetString("dni")
 							},
 							Direccion = reader.GetString("direccion"),
 							Uso = reader.GetString("uso"),

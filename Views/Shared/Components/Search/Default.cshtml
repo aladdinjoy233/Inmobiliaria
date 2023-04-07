@@ -15,8 +15,19 @@
 
 <div class="form-group position-relative">
 	<label for="@searchInput" class="control-label">@inputLabel</label>
+
+	@* Si viene con el parametro de selected, es una edicion y le seteamos el value *@
+	@if (Model.Selected != null)
+	{
+	<input type="hidden" id="@inputId" name="@inputId" value="@Model.Selected.Id">
+	<input type="text" id='@searchInput' name="@searchInput" placeholder="Buscar..." class="form-control" autocomplete="off" value="@Model.Selected.OutputString">
+	}
+	else
+	{
 	<input type="hidden" id="@inputId" name="@inputId">
 	<input type="text" id='@searchInput' name="@searchInput" placeholder="Buscar..." class="form-control" autocomplete="off">
+	}
+
 	<div id="@searchResultsDivId" class="search-results"></div>
 </div>
 
@@ -28,7 +39,20 @@
 
 	let @ShouldRemoveDiv = true;
 
-	@(SearchInput).addEventListener('keyup', e => {
+	@(SearchInput).addEventListener('keyup', @(inputLabel + "Search"))
+
+	@(SearchInput).addEventListener('focus', e => {
+		if (@(IdInput).value != '') return;
+		@(inputLabel + "Search")(e);
+	})
+
+	@(SearchInput).addEventListener('blur', e => {
+		if (!@(ShouldRemoveDiv)) return;
+		if (@(SearchInput).value == '') @(IdInput).value = '';
+		@(InputSearchResults).innerHTML = "";
+	});
+
+	function @(inputLabel + "Search") (e) {
 		const query = @(SearchInput).value.trim();
 
 		if (query == '') {
@@ -56,12 +80,7 @@
 				}
 			})
 			.catch(err => console.log(err));
-	})
-
-	@(SearchInput).addEventListener('blur', e => {
-		if (!@(ShouldRemoveDiv)) return;
-		@(InputSearchResults).innerHTML = "";
-	});
+	}
 
 	document.addEventListener('mousedown', e => @(ShouldRemoveDiv) = !@(InputSearchResults).contains(e.target));
 </script>

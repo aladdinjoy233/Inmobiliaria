@@ -128,7 +128,7 @@ public class RepositorioContrato
 		Contrato contrato = new Contrato();
 		using (MySqlConnection connection = new MySqlConnection(connectionString))
 		{
-			var query = @"SELECT id_contrato, c.id_inmueble, c.id_inquilino, fecha_inicio, fecha_fin, monto_mensual, i.direccion, iq.nombre, iq.apellido
+			var query = @"SELECT id_contrato, c.id_inmueble, c.id_inquilino, fecha_inicio, fecha_fin, monto_mensual, i.direccion, i.tipo, i.precio, iq.nombre, iq.apellido, iq.dni
 			FROM contratos c
 			INNER JOIN inmuebles i ON c.id_inmueble = i.id_inmueble
  			INNER JOIN inquilinos iq ON c.id_inquilino = iq.id_inquilino
@@ -150,6 +150,8 @@ public class RepositorioContrato
 							{
 								IdInmueble = reader.GetInt32("id_inmueble"),
 								Direccion = reader.GetString("direccion"),
+								Tipo = reader.GetString("tipo"),
+								Precio = reader.GetDecimal("precio")
 							},
 							InquilinoId = reader.GetInt32("id_inquilino"),
 							Inquilino = new Inquilino
@@ -157,6 +159,7 @@ public class RepositorioContrato
 								IdInquilino = reader.GetInt32("id_inquilino"),
 								Nombre = reader.GetString("nombre"),
 								Apellido = reader.GetString("apellido"),
+								Dni = reader.GetString("dni")
 							},
 							FechaInicio = reader.GetDateTime("fecha_inicio"),
 							FechaFin = reader.GetDateTime("fecha_fin"),
