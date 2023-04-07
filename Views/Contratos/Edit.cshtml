@@ -6,19 +6,11 @@
 	var listaInquilinos = (IList<Inquilino>)ViewBag.Inquilinos;
 	var inmuebleActual = (Inmueble)ViewBag.InmuebleActual;
 
-	var outputStringInmueble = $"{Model.Inmueble.Direccion} ({Model.Inmueble.Tipo}) - ${Model.Inmueble.Precio}";
-	var selectedInmueble = new SelectedInfo
-	{
-		Id = Model.InmuebleId,
-		OutputString = outputStringInmueble
-	};
+	var outputStringInmueble = $"{Model.Inmueble?.Direccion} ({Model.Inmueble?.Tipo}) - ${Model.Inmueble?.Precio}";
+	var selectedInmueble = new SelectedInfo(Model.InmuebleId, outputStringInmueble);
 
-	var outputStringInquilino = $"{Model.Inquilino.Nombre} {Model.Inquilino.Apellido} ({Model.Inquilino.Dni})";
-	var selectedInquilino = new SelectedInfo
-	{
-		Id = Model.InquilinoId,
-		OutputString = outputStringInquilino
-	};
+	var outputStringInquilino = $"{Model.Inquilino?.Nombre} {Model.Inquilino?.Apellido} ({Model.Inquilino?.Dni})";
+	var selectedInquilino = new SelectedInfo(Model.InquilinoId, outputStringInquilino);
 }
 
 <a asp-action="Index" class="btn btn-sm btn-light">

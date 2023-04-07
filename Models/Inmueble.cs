@@ -5,9 +5,9 @@ namespace Inmobiliaria.Models;
 public class Inmueble
 {
 	public int IdInmueble { get; set; }
-	public int ? PropietarioId { get; set; }
+	public int PropietarioId { get; set; }
 	[Display(Name = "Dueño")]
-	public Propietario ? Propietario { get; set; }
+	public Propietario? Propietario { get; set; }
 	public string ? Direccion { get; set; }
 	public string ? Uso { get; set; }
 	public string ? Tipo { get; set; }
