@@ -113,10 +113,17 @@ namespace Inmobiliaria.Controllers
 			}
 		}
 
-		// GET: Inmuebles/Buscar
+		// GET: Inmuebles/Buscar?searchTerm=
 		public JsonResult Buscar(string searchTerm)
 		{
 			var res = Repo.Buscar(searchTerm);
+			return Json(res);
+		}
+
+		// GET: Inmuebles/Buscar/5?searchTerm
+		public JsonResult BuscarConId(int id, string searchTerm)
+		{
+			var res = Repo.BuscarConId(id, searchTerm);
 			return Json(res);
 		}
 	}

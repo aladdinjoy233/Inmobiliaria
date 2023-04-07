@@ -34,7 +34,7 @@
 		<form asp-action="Edit">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 			@Html.HiddenFor(model => model.IdContrato)
-			@await Component.InvokeAsync("Search", new { searchUrl = Url.Action("Buscar", "Inmuebles"), inputId = "InmuebleId", selected = selectedInmueble })
+			@await Component.InvokeAsync("Search", new { searchUrl = Url.Action("BuscarConId", "Inmuebles", new {id = Model.IdContrato}), inputId = "InmuebleId", selected = selectedInmueble })
 			@await Component.InvokeAsync("Search", new { searchUrl = Url.Action("Buscar", "Inquilinos"), inputId = "InquilinoId", selected = selectedInquilino })
 
 			<div class="form-group">

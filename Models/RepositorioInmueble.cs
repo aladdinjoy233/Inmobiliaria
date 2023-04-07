@@ -260,4 +260,41 @@ public class RepositorioInmueble
 		}
 		return result;
 	}
+
+	public List<object> BuscarConId(int id, string searchQuery)
+	{
+		var result = new List<object>();
+
+		using (MySqlConnection connection = new MySqlConnection(connectionString))
+		{
+			var query = @"SELECT i.id_inmueble, i.direccion, i.tipo, i.precio, i.activo
+			FROM inmuebles i
+			LEFT JOIN contratos c ON i.id_inmueble = c.id_inmueble
+			WHERE i.activo = TRUE
+			AND (c.id_contrato IS NULL OR c.id_contrato = @id)
+			AND (i.direccion LIKE @searchQuery
+			OR i.tipo LIKE @searchQuery
+			OR i.precio LIKE @searchQuery);";
+
+			using (var command = new MySqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@id", id);
+				command.Parameters.AddWithValue("@searchQuery", $"%{searchQuery}%");
+				connection.Open();
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						var direccion = reader.GetString("direccion");
+						var tipo = reader.GetString("tipo");
+						var precio = reader.GetString("precio");
+						var outputString = $"{direccion} ({tipo}) - ${precio}";
+						result.Add(new { outputString, id = reader.GetInt32("id_inmueble") });
+					}
+				}
+			}
+			connection.Close();
+		}
+		return result;
+	}
 }
