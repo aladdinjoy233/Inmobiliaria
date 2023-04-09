@@ -172,4 +172,40 @@ public class RepositorioContrato
 		}
 		return contrato;
 	}
+
+	public List<object> Buscar(string searchQuery)
+	{
+		var result = new List<object>();
+
+		using (MySqlConnection connection = new MySqlConnection(connectionString))
+		{
+			var query = @"SELECT id_contrato, c.id_inmueble, c.id_inquilino, fecha_inicio, fecha_fin, monto_mensual, i.direccion, i.tipo, i.precio, iq.nombre, iq.apellido, iq.dni
+			FROM contratos c
+			INNER JOIN inmuebles i ON c.id_inmueble = i.id_inmueble
+ 			INNER JOIN inquilinos iq ON c.id_inquilino = iq.id_inquilino
+			WHERE i.direccion LIKE @searchQuery
+			OR iq.nombre LIKE @searchQuery
+			OR iq.apellido LIKE @searchQuery
+			OR iq.dni LIKE @searchQuery;";
+
+			using (var command = new MySqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@searchQuery", $"%{searchQuery}%");
+				connection.Open();
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						var direccion = reader.GetString("direccion");
+						var inquilinoNombre = $"{reader.GetString("nombre")} {reader.GetString("apellido")}";
+						var montoMensual = reader.GetDecimal("monto_mensual");
+						var outputString = $"{direccion} ({inquilinoNombre}) - ${montoMensual}";
+						result.Add(new { outputString, id = reader.GetInt32("id_contrato") });
+					}
+				}
+			}
+			connection.Close();
+		}
+		return result;
+	}
 }

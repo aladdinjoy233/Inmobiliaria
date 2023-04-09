@@ -119,5 +119,24 @@ namespace Inmobiliaria.Controllers
 				return View();
 			}
 		}
+
+		// GET: Contratos/Buscar?searchTerm=
+		public JsonResult Buscar(string searchTerm)
+		{
+			try {
+				var res = Repo.Buscar(searchTerm);
+				return Json(res);
+			}
+			catch
+			{
+				throw;
+			}
+		}
+
+		public JsonResult Obtener(int id)
+		{
+			var contrato = Repo.GetContratoPorId(id);
+			return Json(contrato.MontoMensual);
+		}
 	}
 }

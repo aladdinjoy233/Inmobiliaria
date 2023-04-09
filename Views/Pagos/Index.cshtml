@@ -1,0 +1,62 @@
+@model IEnumerable<Inmobiliaria.Models.Pago>
+
+@{
+	ViewData["Title"] = "Pagos";
+}
+
+<div class="d-flex align-items-center justify-content-between">
+	<h1>Pagos</h1>
+	<a asp-action="Create" class="btn btn-sm btn-primary">Añadir un pago</a>
+</div>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.ContratoId)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Numero)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Fecha)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Importe)
+			</th>
+			<th>
+				Acciones
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@($"{item.Contrato?.Inmueble?.Direccion} ({item.Contrato?.Inquilino?.Nombre} {item.Contrato?.Inquilino?.Apellido})")
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Numero)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Fecha)
+				</td>
+				<td>
+					$@Html.DisplayFor(modelItem => item.Importe)
+				</td>
+				<td>
+					<a href='@Url.Action("Edit", new { id = item.IdPago })' class="btn btn-sm btn-light">
+						<i class="fa-solid fa-pencil"></i>
+					</a>
+					<a href='@Url.Action("Details", new { id = item.IdPago })' class="btn btn-sm btn-light">
+						<i class="fa-solid fa-circle-info"></i>
+					</a>
+					<a href='@Url.Action("Delete", new { id = item.IdPago })' class="btn btn-sm btn-light">
+						<i class="fa-solid fa-trash"></i>
+					</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

@@ -1,0 +1,48 @@
+@model Inmobiliaria.Models.Pago
+
+@{
+	ViewData["Title"] = "Detalles";
+	var inquilinoNombre = $"{Model?.Contrato?.Inquilino?.Nombre} {Model?.Contrato?.Inquilino?.Apellido}";
+	var displayString = $"{Model?.Contrato?.Inmueble?.Direccion} (Inquilino: {inquilinoNombre})";
+}
+
+<a asp-action="Index" class="btn btn-sm btn-light">
+	<i class="fa-solid fa-chevron-left"></i> Volver a la lista
+</a>
+<div class="d-flex align-items-center justify-content-between">
+	<h1>Detalles del inmueble</h1>
+	<a href='@Url.Action("Edit", new { id = Model?.IdPago })' class="btn btn-sm btn-primary">
+		Editar <i class="fa-solid fa-pencil"></i>
+	</a>
+</div>
+
+<div>
+	<h4>Pago</h4>
+	<hr />
+	<dl class="row">
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.ContratoId)
+		</dt>
+		<dd class="col-sm-10">
+			@displayString
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Numero)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Numero)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Fecha)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Fecha)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Importe)
+		</dt>
+		<dd class="col-sm-10">
+			$@Html.DisplayFor(model => model.Importe)
+		</dd>
+	</dl>
+</div>
