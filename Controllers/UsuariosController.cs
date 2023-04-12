@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Inmobiliaria.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Http;
@@ -27,7 +30,7 @@ namespace Inmobiliaria.Controllers
 		}
 
 		// GET: Usuarios
-		// [Authorize(Policy = "Administrador")]
+		[Authorize(Policy = "Administrador")]
 		public ActionResult Index()
 		{
 			var usuarios = Repo.GetUsuarios();
@@ -35,7 +38,7 @@ namespace Inmobiliaria.Controllers
 		}
 
 		// GET: Usuarios/Create
-		// [Authorize(Policy = "Administrador")]
+		[Authorize(Policy = "Administrador")]
 		public ActionResult Create()
 		{
 			ViewBag.Roles = Usuario.ObtenerRoles();
@@ -45,7 +48,7 @@ namespace Inmobiliaria.Controllers
 		// POST: Usuarios/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		// [Authorize(Policy = "Administrador")]
+		[Authorize(Policy = "Administrador")]
 		public ActionResult Create(Usuario usuario)
 		{
 			if (!ModelState.IsValid)
@@ -99,7 +102,7 @@ namespace Inmobiliaria.Controllers
 		}
 
 		// GET: Usuarios/Edit/5
-		// [Authorize(Policy = "Administrador")]
+		[Authorize(Policy = "Administrador")]
 		public ActionResult Edit(int id)
 		{
 			ViewBag.Roles = Usuario.ObtenerRoles();
@@ -110,7 +113,7 @@ namespace Inmobiliaria.Controllers
 		// POST: Usuarios/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		// [Authorize(Policy = "Administrador")]
+		[Authorize(Policy = "Administrador")]
 		public ActionResult Edit(int id, Usuario usuario)
 		{
 
@@ -188,7 +191,7 @@ namespace Inmobiliaria.Controllers
 		}
 
 		// GET: Usuarios/Delete/5
-		// [Authorize(Policy = "Administrador")]
+		[Authorize(Policy = "Administrador")]
 		public ActionResult Delete(int id)
 		{
 			var usuario = Repo.GetUsuarioPorId(id);
@@ -198,7 +201,7 @@ namespace Inmobiliaria.Controllers
 		// POST: Usuarios/Delete/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		// [Authorize(Policy = "Administrador")]
+		[Authorize(Policy = "Administrador")]
 		public ActionResult Delete(int id, Usuario usuario)
 		{
 			try
@@ -222,6 +225,78 @@ namespace Inmobiliaria.Controllers
 				var u = Repo.GetUsuarioPorId(id);
 				return View(u);
 			}
+		}
+
+		// GET: Usuarios/Login
+		[AllowAnonymous]
+		public ActionResult Login(string returnUrl)
+		{
+			TempData["returnUrl"] = returnUrl;
+			return View();
+		}
+
+		// POST: Usuarios/Login
+		[HttpPost]
+		[AllowAnonymous]
+		[ValidateAntiForgeryToken]
+		public async Task<ActionResult> Login(LoginView login)
+		{
+			try
+			{
+				var returnUrl = String.IsNullOrEmpty(TempData["returnUrl"] as string) ? "/Home" : TempData["returnUrl"]?.ToString();
+				if (ModelState.IsValid)
+				{
+					string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+						password: login.Password,
+						salt: System.Text.Encoding.ASCII.GetBytes(hashSalt),
+						prf: KeyDerivationPrf.HMACSHA1,
+						iterationCount: 10000,
+						numBytesRequested: 256 / 8
+					));
+
+					var usuario = Repo.GetUsuarioPorEmail(login.Email);
+
+					// Salir temprano por si el usuario no existe o la contraseña es incorrecta
+					if (usuario == null || usuario.Password != hashed)
+					{
+						ModelState.AddModelError("", "Usuario o contraseña incorrectos");
+						TempData["returnUrl"] = returnUrl;
+						return View();
+					}
+
+					var claims = new List<Claim>
+					{
+						new Claim(ClaimTypes.Name, usuario.Email),
+						new Claim("FullName", $"{usuario.Nombre} {usuario.Apellido}"),
+						new Claim(ClaimTypes.Role, usuario.RolNombre)
+					};
+
+					var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+					await HttpContext.SignInAsync(
+						CookieAuthenticationDefaults.AuthenticationScheme,
+						new ClaimsPrincipal(claimsIdentity)
+					);
+
+					TempData.Remove("returnUrl");
+					return Redirect(returnUrl);
+				}
+
+				TempData["returnUrl"] = returnUrl;
+				return View();
+			}
+			catch
+			{
+				throw;
+			}
+		}
+
+		// Get: /Salir
+		[Route("salir", Name = "logout")]
+		public async Task<ActionResult> Logout()
+		{
+			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+			return RedirectToAction("Index", "Home");
 		}
 	}
 }
