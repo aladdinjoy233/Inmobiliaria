@@ -53,3 +53,7 @@ body {
 	background-color: #1e90ff;
 	color: white;
 }
+
+.user-profile {
+	border-radius: 10rem;
+}

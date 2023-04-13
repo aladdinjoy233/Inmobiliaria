@@ -72,7 +72,18 @@
 				for (let result of data) {
 					let suggestion = document.createElement('div');
 
-					suggestion.innerText = result.outputString;
+					// suggestion.innerText = result.outputString;
+
+					// Get the index of the first character that matches the search query
+					const index = result.outputString.toLowerCase().indexOf(query.toLowerCase());
+
+					// Create a new string with the matching characters wrapped in <strong> tags
+					const boldString = `${result.outputString.substring(0, index)}<strong>${result.outputString.substring(index, index + query.length)}</strong>${result.outputString.substring(index + query.length)}`;
+
+					// Set the innerHTML property of the suggestion element to the bolded string
+					suggestion.innerHTML = boldString;
+
+
 					suggestion.addEventListener('click', e => {
 						e.stopPropagation();
 						@(IdInput).value = result.id;

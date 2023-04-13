@@ -58,6 +58,13 @@ namespace Inmobiliaria.Controllers
 			}
 			try
 			{
+				if (usuario.Password != usuario.ConfirmPassword)
+				{
+					ModelState.AddModelError("ConfirmPassword", "Las contraseñas no coinciden");
+					ViewBag.Roles = Usuario.ObtenerRoles();
+					return View();
+				}
+
 				string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
 					password: usuario.Password,
 					salt: System.Text.Encoding.ASCII.GetBytes(hashSalt),
@@ -67,7 +74,7 @@ namespace Inmobiliaria.Controllers
 				));
 				usuario.Password = hashed;
 
-				usuario.Rol = User.IsInRole("Administrator") ? usuario.Rol : (int)enRoles.Empleado;
+				usuario.Rol = User.IsInRole("Administrador") ? usuario.Rol : (int)enRoles.Empleado;
 
 				int res = Repo.Alta(usuario);
 				Repo.ModificarContraseña(usuario);
@@ -101,6 +108,16 @@ namespace Inmobiliaria.Controllers
 			}
 		}
 
+		// GET: Usuarios/Perfil/5
+		[Authorize]
+		public ActionResult Perfil(int id)
+		{
+			ViewData["Title"] = "Mi perfil";
+			ViewBag.Roles = Usuario.ObtenerRoles();
+			var usuario = Repo.GetUsuarioPorId(id);
+			return View("Edit", usuario);
+		}
+
 		// GET: Usuarios/Edit/5
 		[Authorize(Policy = "Administrador")]
 		public ActionResult Edit(int id)
@@ -113,8 +130,8 @@ namespace Inmobiliaria.Controllers
 		// POST: Usuarios/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		[Authorize(Policy = "Administrador")]
-		public ActionResult Edit(int id, Usuario usuario)
+		[Authorize]
+		public async Task<ActionResult> Edit(int id, Usuario usuario)
 		{
 
 			if (!ModelState.IsValid && ModelState.ErrorCount > 1
@@ -131,8 +148,19 @@ namespace Inmobiliaria.Controllers
 			try
 			{
 
+				var usuarioDB = Repo.GetUsuarioPorId(usuario.IdUsuario);
+				var modoEdicionDePerfil = User.Identity.Name == usuarioDB.Email;
+
 				if (usuario.Password != null)
 				{
+					if (usuario.Password != usuario.ConfirmPassword)
+					{
+						ModelState.AddModelError("ConfirmPassword", "Las contraseñas no coinciden");
+						ViewBag.Roles = Usuario.ObtenerRoles();
+						var usuarioErr = Repo.GetUsuarioPorId(id);
+						return View(usuarioErr);
+					}
+
 					string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
 						password: usuario.Password,
 						salt: System.Text.Encoding.ASCII.GetBytes(hashSalt),
@@ -146,7 +174,7 @@ namespace Inmobiliaria.Controllers
 					Repo.ModificarContraseña(usuario);
 				}
 
-				usuario.Rol = User.IsInRole("Administrator") ? usuario.Rol : (int)enRoles.Empleado;
+				usuario.Rol = User.IsInRole("Administrador") ? usuario.Rol : (int)enRoles.Empleado;
 
 				int res = Repo.Modificar(usuario);
 				if (usuario.AvatarFile != null && usuario.IdUsuario > 0)
@@ -158,7 +186,7 @@ namespace Inmobiliaria.Controllers
 						Directory.CreateDirectory(path);
 					}
 
-					var usuarioDB = Repo.GetUsuarioPorId(usuario.IdUsuario);
+					// Usarmos el usuario de la base de datos para ver si existe una imagen
 					if (usuarioDB.Avatar != null) {
 						// Borrar la foto si existe
 						string existingFilePath = Path.Combine(path, $"avatar_{usuario.IdUsuario}{Path.GetExtension(usuarioDB.Avatar)}");
@@ -180,13 +208,39 @@ namespace Inmobiliaria.Controllers
 					Repo.ModificarAvatar(usuario);
 				}
 
-				return RedirectToAction(nameof(Index));
+				// Si estan editanto, modificar el claim
+				if (modoEdicionDePerfil)
+				{
+					var claims = new List<Claim>
+					{
+						new Claim(ClaimTypes.Name, usuario.Email ?? usuarioDB.Email),
+						new Claim("FullName", $"{usuario.Nombre ?? usuarioDB.Nombre} {usuario.Apellido ?? usuarioDB.Apellido}"),
+						new Claim(ClaimTypes.Role, usuario.RolNombre),
+						new Claim("IdUsuario", usuario.IdUsuario.ToString()),
+						new Claim("Avatar", usuario.Avatar ?? usuarioDB.Avatar ?? "")
+					};
+
+					var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+					await HttpContext.SignInAsync(
+						CookieAuthenticationDefaults.AuthenticationScheme,
+						new ClaimsPrincipal(claimsIdentity)
+					);
+				}
+
+				if (modoEdicionDePerfil)
+				{
+					return RedirectToAction("Index", "Home");
+				}
+				else
+				{
+					return RedirectToAction(nameof(Index));
+				}
+
 			}
 			catch
 			{
 				throw;
-				// ViewBag.Roles = Usuario.ObtenerRoles();
-				// return View();
 			}
 		}
 
@@ -268,7 +322,9 @@ namespace Inmobiliaria.Controllers
 					{
 						new Claim(ClaimTypes.Name, usuario.Email),
 						new Claim("FullName", $"{usuario.Nombre} {usuario.Apellido}"),
-						new Claim(ClaimTypes.Role, usuario.RolNombre)
+						new Claim(ClaimTypes.Role, usuario.RolNombre),
+						new Claim("IdUsuario", usuario.IdUsuario.ToString()),
+						new Claim("Avatar", usuario.Avatar ?? "")
 					};
 
 					var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

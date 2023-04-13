@@ -25,6 +25,9 @@ public class Usuario
 	[Required(ErrorMessage = "La contraseña es opcional en edición.")]
 	public string Password { get; set; } = "";
 
+	[Display(Name = "Confirmar contraseña")]
+	public string ConfirmPassword { get; set; } = "";
+
 	public string? Avatar { get; set; }
 
 	public IFormFile? AvatarFile { get; set; }
