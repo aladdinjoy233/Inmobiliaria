@@ -79,7 +79,9 @@ else
 	<div class="col-md-8">
 		@if (@Model.Avatar != null)
 		{
-			<img width="128" src="@Model.Avatar">
+			<div class="form-avatar">
+				<img src="@Model.Avatar">
+			</div>
 		}
 	</div>
 </div>

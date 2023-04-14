@@ -45,8 +45,9 @@
 
 							<div class="dropdown" style="margin-left: auto;">
 								<button class="btn btn-link" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-									<img class="user-profile" width="32" height="32"
-									src='@(User.FindFirst("Avatar")?.Value != null && User.FindFirst("Avatar")?.Value != "" ? User.FindFirst("Avatar")?.Value : "/img/user_avatar.jpg")'>
+									<div class="user-profile">
+										<img src='@(User.FindFirst("Avatar")?.Value != null && User.FindFirst("Avatar")?.Value != "" ? User.FindFirst("Avatar")?.Value : "/img/user_avatar.jpg")'>
+									</div>
 								</button>
 								<ul class="dropdown-menu" style="left: 50%; transform: translateX(-50%);" aria-labelledby="dropdownMenuButton">
 									@if (User.IsInRole("Administrador"))
