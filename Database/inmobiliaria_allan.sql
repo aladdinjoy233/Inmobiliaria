@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 09, 2023 at 10:33 PM
+-- Generation Time: Apr 14, 2023 at 08:24 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -147,6 +147,32 @@ INSERT INTO `propietarios` (`id_propietario`, `dni`, `apellido`, `nombre`, `tele
 (11, 'test3', '3', '3', '3', '3'),
 (12, 'test4', '4', '4', '4', NULL);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `usuarios`
+--
+
+CREATE TABLE `usuarios` (
+  `id_usuario` int(11) NOT NULL,
+  `nombre` varchar(45) NOT NULL,
+  `apellido` varchar(45) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `password` longtext NOT NULL,
+  `avatar` longtext DEFAULT NULL,
+  `rol` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `usuarios`
+--
+
+INSERT INTO `usuarios` (`id_usuario`, `nombre`, `apellido`, `email`, `password`, `avatar`, `rol`) VALUES
+(1, 'Allan', 'Chica', 'ninjalover249@gmail.com', 'a8m9KfoAdA5bH52P2q/hQEdLDj60H75G/m6fz2MneJU=', '/Uploads\\avatar_1.jpg', 2),
+(5, 'Nombre', 'Apellido', 'hola@gmail.com', 'a8m9KfoAdA5bH52P2q/hQEdLDj60H75G/m6fz2MneJU=', '/Uploads\\avatar_5.jpeg', 1),
+(7, 'a', 'a', 'a@a.com', 'a8m9KfoAdA5bH52P2q/hQEdLDj60H75G/m6fz2MneJU=', '/Uploads\\avatar_7.gif', 1),
+(8, 'Lionel', 'Messi', 'tresestrellas@scaloneta.com', 'a8m9KfoAdA5bH52P2q/hQEdLDj60H75G/m6fz2MneJU=', '/Uploads\\avatar_8.jpg', 1);
+
 --
 -- Indexes for dumped tables
 --
@@ -188,6 +214,13 @@ ALTER TABLE `propietarios`
   ADD UNIQUE KEY `dni` (`dni`);
 
 --
+-- Indexes for table `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD PRIMARY KEY (`id_usuario`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -220,6 +253,12 @@ ALTER TABLE `pagos`
 --
 ALTER TABLE `propietarios`
   MODIFY `id_propietario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `usuarios`
+--
+ALTER TABLE `usuarios`
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Constraints for dumped tables
