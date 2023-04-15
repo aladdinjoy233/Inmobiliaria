@@ -21,6 +21,7 @@ namespace Inmobiliaria.Controllers
 		// GET: Inquilinos
 		public ActionResult Index()
 		{
+			ViewBag.Success = TempData["Success"];
 			var lista = Repo.GetInquilinos();
 			return View(lista);
 		}
@@ -43,14 +44,21 @@ namespace Inmobiliaria.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Create(Inquilino inquilino)
 		{
+			if (!ModelState.IsValid)
+			{
+				ViewBag.Error = "Faltan datos";
+				return View(inquilino);
+			}
+			
 			try
 			{
 				Repo.Alta(inquilino);
+				TempData["Success"] = "Inquilino creado con exito!";
 				return RedirectToAction(nameof(Index));
 			}
 			catch
 			{
-				return View();
+				return View(inquilino);
 			}
 		}
 
@@ -66,14 +74,21 @@ namespace Inmobiliaria.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Edit(int id, Inquilino inquilino)
 		{
+			if (!ModelState.IsValid)
+			{
+				ViewBag.Error = "Faltan datos";
+				return View(inquilino);
+			}
+
 			try
 			{
 				Repo.Modificar(inquilino);
+				TempData["Success"] = "Inquilino modificado con exito!";
 				return RedirectToAction(nameof(Index));
 			}
 			catch
 			{
-				return View();
+				return View(inquilino);
 			}
 		}
 
@@ -92,11 +107,13 @@ namespace Inmobiliaria.Controllers
 			try
 			{
 				Repo.Eliminar(id);
+				TempData["Success"] = "Inquilino eliminado con exito!";
 				return RedirectToAction(nameof(Index));
 			}
 			catch
 			{
-				throw;
+				ViewBag.Error = "No se pudo eliminar el inquilino";
+				return View(inquilino);
 			}
 		}
 
