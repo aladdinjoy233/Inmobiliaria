@@ -20,29 +20,9 @@
 		<form asp-action="Create">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 			@await Component.InvokeAsync("Search", new { searchUrl = Url.Action("Buscar", "Inmuebles"), inputId = "InmuebleId" })
-			@* <div class="form-group">
-				<label class="control-label">Inmuebles</label>
-				<select class="form-control" name="InmuebleId">
-					<option value="null" disabled selected>Seleccione un inmueble</option>
-					@foreach (var item in listaInmuebles)
-					{
-						<option value="@item.IdInmueble">@(item.Direccion)</option>
-					}
-				</select>
-				<span asp-validation-for="InmuebleId" class="text-danger"></span>
-			</div> *@
+
 			@await Component.InvokeAsync("Search", new { searchUrl = Url.Action("Buscar", "Inquilinos"), inputId = "InquilinoId" })
-			@* <div class="form-group">
-				<label class="control-label">Inquilinos</label>
-				<select class="form-control" name="InquilinoId">
-					<option value="null" disabled selected>Seleccione un inquilino</option>
-					@foreach (var item in listaInquilinos)
-					{
-						<option value="@item.IdInquilino">@(item.ToString())</option>
-					}
-				</select>
-				<span asp-validation-for="InquilinoId" class="text-danger"></span>
-			</div> *@
+
 			<div class="form-group">
 				<label asp-for="FechaInicio" class="control-label"></label>
 				<input asp-for="FechaInicio" type="date" class="form-control" />

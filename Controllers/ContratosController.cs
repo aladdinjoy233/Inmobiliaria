@@ -28,6 +28,7 @@ namespace Inmobiliaria.Controllers
 		// GET: Contratos
 		public ActionResult Index()
 		{
+			ViewBag.Success = TempData["Success"];
 			var lista = Repo.GetContratos();
 			return View(lista);
 		}
@@ -43,16 +44,9 @@ namespace Inmobiliaria.Controllers
 		// GET: Contratos/Create
 		public ActionResult Create()
 		{
-			try
-			{
-				ViewBag.Inmuebles = RepoInmueble.GetInmueblesParaAlquilar();
-				ViewBag.Inquilinos = RepoInquilino.GetInquilinos();
-				return View();
-			}
-			catch
-			{
-				throw;
-			}
+			ViewBag.Inmuebles = RepoInmueble.GetInmueblesParaAlquilar();
+			ViewBag.Inquilinos = RepoInquilino.GetInquilinos();
+			return View();
 		}
 
 		// POST: Contratos/Create
@@ -60,14 +54,25 @@ namespace Inmobiliaria.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Create(Contrato contrato)
 		{
+			if (!ModelState.IsValid)
+			{
+				ViewBag.Error = "Faltan datos";
+				ViewBag.Inmuebles = RepoInmueble.GetInmueblesParaAlquilar();
+				ViewBag.Inquilinos = RepoInquilino.GetInquilinos();
+				return View(contrato);
+			}
+
 			try
 			{
 				Repo.Alta(contrato);
+				TempData["Success"] = "Contrato creado correctamente";
 				return RedirectToAction(nameof(Index));
 			}
 			catch
 			{
-				throw;
+				ViewBag.Inmuebles = RepoInmueble.GetInmueblesParaAlquilar();
+				ViewBag.Inquilinos = RepoInquilino.GetInquilinos();
+				return View();
 			}
 		}
 
@@ -86,15 +91,29 @@ namespace Inmobiliaria.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Edit(int id, Contrato contrato)
 		{
+			if (!ModelState.IsValid)
+			{
+				ViewBag.Error = "Faltan datos";
+				ViewBag.Inmuebles = RepoInmueble.GetInmueblesParaAlquilar();
+				ViewBag.Inquilinos = RepoInquilino.GetInquilinos();
+				var lastContrato = Repo.GetContratoPorId(id);
+				ViewBag.InmuebleActual = RepoInmueble.GetInmueblePorId(lastContrato.InmuebleId);
+				return View(lastContrato);
+			}
+
 			try
 			{
 				contrato.IdContrato = id;
 				Repo.Modificar(contrato);
+				TempData["Success"] = "Contrato modificado correctamente";
 				return RedirectToAction(nameof(Index));
 			}
 			catch
 			{
-				throw;
+				ViewBag.Inmuebles = RepoInmueble.GetInmueblesParaAlquilar();
+				ViewBag.Inquilinos = RepoInquilino.GetInquilinos();
+				ViewBag.InmuebleActual = RepoInmueble.GetInmueblePorId(contrato.InmuebleId);
+				return View(contrato);
 			}
 		}
 
@@ -114,11 +133,13 @@ namespace Inmobiliaria.Controllers
 			try
 			{
 				Repo.Eliminar(id);
+				TempData["Success"] = "Contrato eliminado correctamente";
 				return RedirectToAction(nameof(Index));
 			}
 			catch
 			{
-				return View();
+				contrato.Inmueble = RepoInmueble.GetInmueblePorId(contrato.InmuebleId);
+				return View(contrato);
 			}
 		}
 
