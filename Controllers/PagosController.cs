@@ -24,6 +24,7 @@ namespace Inmobiliaria.Controllers
 		// GET: Pagos
 		public ActionResult Index()
 		{
+			ViewBag.Success = TempData["Success"];
 			var lista = Repo.GetPagos();
 			return View(lista);
 		}
@@ -38,14 +39,7 @@ namespace Inmobiliaria.Controllers
 		// GET: Pagos/Create
 		public ActionResult Create()
 		{
-			try
-			{
-				return View();
-			}
-			catch
-			{
-				throw;
-			}
+			return View();
 		}
 
 		// POST: Pagos/Create
@@ -53,9 +47,16 @@ namespace Inmobiliaria.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Create(Pago pago)
 		{
+			if (!ModelState.IsValid)
+			{
+				ViewBag.Error = "Faltan datos";
+				return View();
+			}
+
 			try
 			{
 				Repo.Alta(pago);
+				TempData["Success"] = "Pago agregado correctamente";
 				return RedirectToAction(nameof(Index));
 			}
 			catch
@@ -76,15 +77,25 @@ namespace Inmobiliaria.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Edit(int id, Pago pago)
 		{
+			if (!ModelState.IsValid)
+			{
+				ViewBag.Error = "Faltan datos";
+				var lastPago = Repo.GetPagoPorId(id);
+				return View(lastPago);
+			}
+
 			try
 			{
 				pago.IdPago = id;
 				Repo.Modificar(pago);
+				TempData["Success"] = "Pago modificado correctamente";
 				return RedirectToAction(nameof(Index));
 			}
 			catch
 			{
-				throw;
+				ViewBag.Error = "Error al modificar el pago";
+				var lastPago = Repo.GetPagoPorId(id);
+				return View(lastPago);
 			}
 		}
 
@@ -103,11 +114,12 @@ namespace Inmobiliaria.Controllers
 			try
 			{
 				Repo.Eliminar(id);
+				TempData["Success"] = "Pago eliminado correctamente";
 				return RedirectToAction(nameof(Index));
 			}
 			catch
 			{
-				throw;
+				return View(pago);
 			}
 		}
 
