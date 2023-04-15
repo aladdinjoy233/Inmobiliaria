@@ -3,7 +3,7 @@
 
 // Write your JavaScript code.
 setTimeout(() => {
-	var divToHide = document.getElementById("error-msg");
+	var divToHide = document.getElementById("notification");
 	if (divToHide) {
 		divToHide.style.display = "none";
 		divToHide.remove();

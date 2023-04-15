@@ -86,7 +86,7 @@ img {
 	background-color: #ddd;
 }
 
-#error-msg {
+#notification {
 	position: absolute;
 	width: 100%;
 	top: -1.5rem;
