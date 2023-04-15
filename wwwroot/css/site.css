@@ -85,3 +85,20 @@ img {
 	overflow: hidden;
 	background-color: #ddd;
 }
+
+#error-msg {
+	position: absolute;
+	width: 100%;
+	top: -1.5rem;
+	opacity: 1;
+	animation: fade-out 1s ease-out 5s forwards;
+}
+
+@keyframes fade-out {
+	0% { opacity: 1; }
+	100% { opacity: 0; }
+}
+
+tr {
+	vertical-align: middle;
+}

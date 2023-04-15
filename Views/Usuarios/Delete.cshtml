@@ -2,6 +2,8 @@
 
 @{
 	ViewData["Title"] = "Eliminar";
+
+	var usuarioAvatar = Model.Avatar != null && Model.Avatar != "" ? Model.Avatar : "/img/user_avatar.jpg";
 }
 
 <a asp-action="Index" class="btn btn-sm btn-light">
@@ -37,7 +39,9 @@
 			@Html.DisplayNameFor(model => model.Avatar)
 		</dt>
 		<dd class="col-sm-10">
-			<img width="64" src="@Model.Avatar">
+			<div class="form-avatar">
+				<img src="@usuarioAvatar">
+			</div>
 		</dd>
 		<dt class="col-sm-2">
 			@Html.DisplayNameFor(model => model.Rol)

@@ -37,8 +37,11 @@
 		{
 			<tr>
 				<td>
+					@{
+						var usuarioAvatar = item.Avatar != null && item.Avatar != "" ? item.Avatar : "/img/user_avatar.jpg";
+					}
 					<div class="table-avatar">
-						<img src="@item.Avatar">
+						<img src="@usuarioAvatar">
 					</div>
 				</td>
 				<td>

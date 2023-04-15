@@ -58,9 +58,21 @@ namespace Inmobiliaria.Controllers
 			}
 			try
 			{
+				// Comprobar que el email ingresado no existe en la BD
+				var usuarioDB = Repo.GetUsuarioPorEmail(usuario.Email);
+				if (usuarioDB.IdUsuario > 0)
+				{
+					ModelState.AddModelError("Email", "El email ingresado ya existe");
+					ViewBag.Error = "El email ingresado ya existe";
+					ViewBag.Roles = Usuario.ObtenerRoles();
+					return View();
+				}
+
+				// Comprobar que las contraseñas sean iguales
 				if (usuario.Password != usuario.ConfirmPassword)
 				{
 					ModelState.AddModelError("ConfirmPassword", "Las contraseñas no coinciden");
+					ViewBag.Error = "Las contraseñas no coinciden";
 					ViewBag.Roles = Usuario.ObtenerRoles();
 					return View();
 				}
@@ -137,30 +149,48 @@ namespace Inmobiliaria.Controllers
 		public async Task<ActionResult> Edit(int id, Usuario usuario)
 		{
 
-			if (!ModelState.IsValid && ModelState.ErrorCount > 1
-				&& (ModelState.ContainsKey("Nombre")
-				|| ModelState.ContainsKey("Apellido")
-				|| ModelState.ContainsKey("Email"))
-			)
+			// Contraseña no es obligatorio en edicion
+			if (ModelState.ContainsKey("Password")) ModelState.Remove("Password");
+			if (ModelState.ContainsKey("ConfirmPassword")) ModelState.Remove("ConfirmPassword");
+
+			var usuarioDB = Repo.GetUsuarioPorId(usuario.IdUsuario);
+
+			if (!ModelState.IsValid)
 			{
 				ViewBag.Roles = Usuario.ObtenerRoles();
-				var usuarioErr = Repo.GetUsuarioPorId(id);
-				return View(usuarioErr);
+				return View(usuarioDB);
 			}
 
 			try
 			{
-				var usuarioDB = Repo.GetUsuarioPorId(usuario.IdUsuario);
+				// Comprobar que el email ingresado no existe en la BD
+				var usuarioEmailCheck = Repo.GetUsuarioPorEmail(usuario.Email);
+				if (usuarioEmailCheck.IdUsuario > 0 && usuarioEmailCheck.IdUsuario != usuario.IdUsuario)
+				{
+					ModelState.AddModelError("Email", "El email ingresado ya existe");
+					ViewBag.Error = "Email no puede coincidir con otro usuario";
+					ViewBag.Roles = Usuario.ObtenerRoles();
+					return View(usuarioDB);
+				}
+
 				var modoEdicionDePerfil = TempData.ContainsKey("Perfil") && (bool)TempData.Peek("Perfil") == true;
 
 				if (usuario.Password != null)
 				{
+					if (usuario.ConfirmPassword == null)
+					{
+						ModelState.AddModelError("ConfirmPassword", "No puede ser vacia");
+						ViewBag.Error = "Confirmacion vacia";
+						ViewBag.Roles = Usuario.ObtenerRoles();
+						return View(usuarioDB);
+					}
+
 					if (usuario.Password != usuario.ConfirmPassword)
 					{
 						ModelState.AddModelError("ConfirmPassword", "Las contraseñas no coinciden");
+						ViewBag.Error = "Las contraseñas no coinciden";
 						ViewBag.Roles = Usuario.ObtenerRoles();
-						var usuarioErr = Repo.GetUsuarioPorId(id);
-						return View(usuarioErr);
+						return View(usuarioDB);
 					}
 
 					string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(

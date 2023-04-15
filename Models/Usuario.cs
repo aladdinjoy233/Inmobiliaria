@@ -12,20 +12,21 @@ public class Usuario
 {
 	public int IdUsuario { get; set; }
 
-	[Required]
+	[Required(ErrorMessage = "El nombre es requerido")]
 	public string? Nombre { get; set; }
 
-	[Required]
+	[Required(ErrorMessage = "El apellido es requerido")]
 	public string? Apellido { get; set; }
 
-	[Required]
+	[Required(ErrorMessage = "El correo es requerido")]
 	[EmailAddress]
 	public string? Email { get; set; }
 
-	[Required(ErrorMessage = "La contraseña es opcional en edición.")]
+	[Required(ErrorMessage = "La contraseña es requerida")]
 	public string Password { get; set; } = "";
 
 	[Display(Name = "Confirmar contraseña")]
+	[Required(ErrorMessage = "La confirmacion es requerida")]
 	public string ConfirmPassword { get; set; } = "";
 
 	public string? Avatar { get; set; }

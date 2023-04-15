@@ -2,6 +2,8 @@
 
 @{
 	ViewData["Title"] = "Editar";
+
+	var usuarioAvatar = Model.Avatar != null && Model.Avatar != "" ? Model.Avatar : "/img/user_avatar.jpg";
 }
 
 @if (User.Identity.Name == Model.Email)
@@ -77,11 +79,8 @@ else
 	</div>
 
 	<div class="col-md-8">
-		@if (@Model.Avatar != null)
-		{
-			<div class="form-avatar">
-				<img src="@Model.Avatar">
-			</div>
-		}
+		<div class="form-avatar">
+			<img src="@usuarioAvatar">
+		</div>
 	</div>
 </div>

@@ -66,7 +66,13 @@
 		</nav>
 	</header>
 	<div class="container">
-		<main role="main" class="pb-3">
+		<main role="main" style="position: relative;" class="pb-3">
+			@if (ViewBag.Error != null) // Show error message
+			{
+				<div id="error-msg" class="alert alert-danger fade show d-flex justify-content-between" role="alert">
+					<span><strong>Error!</strong> @ViewBag.Error</span>
+				</div>
+			}
 			@RenderBody()
 		</main>
 	</div>
