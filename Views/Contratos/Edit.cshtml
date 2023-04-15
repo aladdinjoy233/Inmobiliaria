@@ -6,7 +6,7 @@
 	var listaInquilinos = (IList<Inquilino>)ViewBag.Inquilinos;
 	var inmuebleActual = (Inmueble)ViewBag.InmuebleActual;
 
-	var outputStringInmueble = $"{Model.Inmueble?.Direccion} ({Model.Inmueble?.Tipo}) - ${Model.Inmueble?.Precio}";
+	var outputStringInmueble = $"{Model.Inmueble?.Direccion} ({Model.Inmueble?.TipoNombre}) - ${Model.Inmueble?.Precio}";
 	var selectedInmueble = new SelectedInfo(Model.InmuebleId, outputStringInmueble);
 
 	var outputStringInquilino = $"{Model.Inquilino?.Nombre} {Model.Inquilino?.Apellido} ({Model.Inquilino?.Dni})";

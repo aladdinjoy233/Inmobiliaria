@@ -115,8 +115,8 @@ public class RepositorioInmueble
 								Apellido = reader.GetString("apellido")
 							},
 							Direccion = reader.GetString("direccion"),
-							Uso = reader.GetString("uso"),
-							Tipo = reader.GetString("tipo"),
+							Uso = reader.GetInt32("uso"),
+							Tipo = reader.GetInt32("tipo"),
 							Ambientes = reader.GetInt32("ambientes"),
 							Latitud = reader.GetDecimal("latitud"),
 							Longitud = reader.GetDecimal("longitud"),
@@ -162,8 +162,8 @@ public class RepositorioInmueble
 								Apellido = reader.GetString("apellido")
 							},
 							Direccion = reader.GetString("direccion"),
-							Uso = reader.GetString("uso"),
-							Tipo = reader.GetString("tipo"),
+							Uso = reader.GetInt32("uso"),
+							Tipo = reader.GetInt32("tipo"),
 							Ambientes = reader.GetInt32("ambientes"),
 							Latitud = reader.GetDecimal("latitud"),
 							Longitud = reader.GetDecimal("longitud"),
@@ -209,8 +209,8 @@ public class RepositorioInmueble
 								Dni = reader.GetString("dni")
 							},
 							Direccion = reader.GetString("direccion"),
-							Uso = reader.GetString("uso"),
-							Tipo = reader.GetString("tipo"),
+							Uso = reader.GetInt32("uso"),
+							Tipo = reader.GetInt32("tipo"),
 							Ambientes = reader.GetInt32("ambientes"),
 							Latitud = reader.GetDecimal("latitud"),
 							Longitud = reader.GetDecimal("longitud"),
@@ -249,9 +249,12 @@ public class RepositorioInmueble
 					while (reader.Read())
 					{
 						var direccion = reader.GetString("direccion");
-						var tipo = reader.GetString("tipo");
+						var tipoInmueble = new Inmueble
+						{
+							Tipo = reader.GetInt32("tipo"),
+						};
 						var precio = reader.GetString("precio");
-						var outputString = $"{direccion} ({tipo}) - ${precio}";
+						var outputString = $"{direccion} ({tipoInmueble.TipoNombre}) - ${precio}";
 						result.Add(new { outputString, id = reader.GetInt32("id_inmueble") });
 					}
 				}
@@ -286,9 +289,12 @@ public class RepositorioInmueble
 					while (reader.Read())
 					{
 						var direccion = reader.GetString("direccion");
-						var tipo = reader.GetString("tipo");
+						var tipoInmueble = new Inmueble
+						{
+							Tipo = reader.GetInt32("tipo"),
+						};
 						var precio = reader.GetString("precio");
-						var outputString = $"{direccion} ({tipo}) - ${precio}";
+						var outputString = $"{direccion} ({tipoInmueble.TipoNombre}) - ${precio}";
 						result.Add(new { outputString, id = reader.GetInt32("id_inmueble") });
 					}
 				}

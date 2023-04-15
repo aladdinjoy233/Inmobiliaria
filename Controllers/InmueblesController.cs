@@ -39,6 +39,8 @@ namespace Inmobiliaria.Controllers
 		// GET: Inmuebles/Create
 		public ActionResult Create()
 		{
+			ViewBag.Usos = Inmueble.ObtenerUsos();
+			ViewBag.Tipos = Inmueble.ObtenerTipos();
 			ViewBag.Propietarios = RepoPropietario.GetPropietarios();
 			return View();
 		}
@@ -48,9 +50,13 @@ namespace Inmobiliaria.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Create(Inmueble inmueble)
 		{
-			if (!ModelState.IsValid)
+			if (!ModelState.IsValid || inmueble.Uso == 0 || inmueble.Tipo == 0)
 			{
 				ViewBag.Error = "Faltan datos";
+				if (inmueble.Uso == 0) ModelState.AddModelError("Uso", "El uso es requerido");
+				if (inmueble.Tipo == 0)	ModelState.AddModelError("Tipo", "El tipo es requerido");
+				ViewBag.Usos = Inmueble.ObtenerUsos();
+				ViewBag.Tipos = Inmueble.ObtenerTipos();
 				ViewBag.Propietarios = RepoPropietario.GetPropietarios();
 				return View(inmueble);
 			}
@@ -63,6 +69,8 @@ namespace Inmobiliaria.Controllers
 			}
 			catch
 			{
+				ViewBag.Usos = Inmueble.ObtenerUsos();
+				ViewBag.Tipos = Inmueble.ObtenerTipos();
 				ViewBag.Propietarios = RepoPropietario.GetPropietarios();
 				return View();
 			}
@@ -72,6 +80,8 @@ namespace Inmobiliaria.Controllers
 		public ActionResult Edit(int id)
 		{
 			ViewBag.Propietarios = RepoPropietario.GetPropietarios();
+			ViewBag.Usos = Inmueble.ObtenerUsos();
+			ViewBag.Tipos = Inmueble.ObtenerTipos();
 			var inmueble = Repo.GetInmueblePorId(id);
 			return View(inmueble);
 		}
@@ -81,9 +91,13 @@ namespace Inmobiliaria.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Edit(int id, Inmueble inmueble)
 		{
-			if (!ModelState.IsValid)
+			if (!ModelState.IsValid || inmueble.Uso == 0 || inmueble.Tipo == 0)
 			{
 				ViewBag.Error = "Faltan datos";
+				if (inmueble.Uso == 0) ModelState.AddModelError("Uso", "El uso es requerido");
+				if (inmueble.Tipo == 0)	ModelState.AddModelError("Tipo", "El tipo es requerido");
+				ViewBag.Usos = Inmueble.ObtenerUsos();
+				ViewBag.Tipos = Inmueble.ObtenerTipos();
 				ViewBag.Propietarios = RepoPropietario.GetPropietarios();
 				return View(inmueble);
 			}
@@ -96,6 +110,8 @@ namespace Inmobiliaria.Controllers
 			}
 			catch
 			{
+				ViewBag.Usos = Inmueble.ObtenerUsos();
+				ViewBag.Tipos = Inmueble.ObtenerTipos();
 				ViewBag.Propietarios = RepoPropietario.GetPropietarios();
 				return View(inmueble);
 			}

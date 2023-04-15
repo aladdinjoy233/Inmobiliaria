@@ -150,7 +150,7 @@ public class RepositorioContrato
 							{
 								IdInmueble = reader.GetInt32("id_inmueble"),
 								Direccion = reader.GetString("direccion"),
-								Tipo = reader.GetString("tipo"),
+								Tipo = reader.GetInt32("tipo"),
 								Precio = reader.GetDecimal("precio")
 							},
 							InquilinoId = reader.GetInt32("id_inquilino"),
