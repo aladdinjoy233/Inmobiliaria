@@ -24,6 +24,7 @@ namespace Inmobiliaria.Controllers
 		// GET: Inmuebles
 		public ActionResult Index()
 		{
+			ViewBag.Success = TempData["Success"];
 			var lista = Repo.GetInmuebles();
 			return View(lista);
 		}
@@ -38,15 +39,8 @@ namespace Inmobiliaria.Controllers
 		// GET: Inmuebles/Create
 		public ActionResult Create()
 		{
-			try
-			{
-				ViewBag.Propietarios = RepoPropietario.GetPropietarios();
-				return View();
-			}
-			catch
-			{
-				throw;
-			}
+			ViewBag.Propietarios = RepoPropietario.GetPropietarios();
+			return View();
 		}
 
 		// POST: Inmuebles/Create
@@ -54,13 +48,22 @@ namespace Inmobiliaria.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Create(Inmueble inmueble)
 		{
+			if (!ModelState.IsValid)
+			{
+				ViewBag.Error = "Faltan datos";
+				ViewBag.Propietarios = RepoPropietario.GetPropietarios();
+				return View(inmueble);
+			}
+
 			try
 			{
 				Repo.Alta(inmueble);
+				TempData["Success"] = "Inmueble creado correctamente";
 				return RedirectToAction(nameof(Index));
 			}
 			catch
 			{
+				ViewBag.Propietarios = RepoPropietario.GetPropietarios();
 				return View();
 			}
 		}
@@ -78,17 +81,23 @@ namespace Inmobiliaria.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Edit(int id, Inmueble inmueble)
 		{
+			if (!ModelState.IsValid)
+			{
+				ViewBag.Error = "Faltan datos";
+				ViewBag.Propietarios = RepoPropietario.GetPropietarios();
+				return View(inmueble);
+			}
 			try
 			{
 				inmueble.IdInmueble = id;
 				Repo.Modificar(inmueble);
+				TempData["Success"] = "Inmueble modificado correctamente";
 				return RedirectToAction(nameof(Index));
 			}
 			catch
 			{
-				// ViewBag.Propietarios = RepoPropietario.GetPropietarios();
-				// return View(inmueble);
-				throw;
+				ViewBag.Propietarios = RepoPropietario.GetPropietarios();
+				return View(inmueble);
 			}
 		}
 
@@ -107,11 +116,12 @@ namespace Inmobiliaria.Controllers
 			try
 			{
 				Repo.Eliminar(id);
+				TempData["Success"] = "Inmueble eliminado correctamente";
 				return RedirectToAction(nameof(Index));
 			}
 			catch
 			{
-				throw;
+				return View(inmueble);
 			}
 		}
 

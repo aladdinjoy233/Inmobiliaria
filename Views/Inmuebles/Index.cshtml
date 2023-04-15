@@ -37,7 +37,7 @@
 				@Html.DisplayNameFor(model => model.Propietario)
 			</th>
 			<th>
-				@Html.DisplayNameFor(model => model.Activo)
+				Estado
 			</th>
 			<th>
 				Acciones
@@ -73,7 +73,7 @@
 					@(item.Propietario!.ToString())
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => item.Activo)
+					@(item.Activo ? "Activo" : "Inactivo")
 				</td>
 				<td>
 					<a href='@Url.Action("Edit", new { id = item.IdInmueble })' class="btn btn-sm btn-light">
