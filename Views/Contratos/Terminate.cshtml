@@ -1,0 +1,59 @@
+@model Inmobiliaria.Models.Contrato
+
+@{
+	ViewData["Title"] = "Eliminar";
+}
+
+<a asp-action="Index" class="btn btn-sm btn-light">
+	<i class="fa-solid fa-chevron-left"></i> Volver a la lista
+</a>
+<div class="d-flex align-items-center justify-content-between">
+	<h1>Terminar un contrato</h1>
+</div>
+
+<h3>Esta seguro que desea terminar este contrato?</h3>
+<div>
+	<hr />
+	<dl class="row">
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Inmueble)
+		</dt>
+		<dd class="col-sm-10">
+			@(Model.Inmueble!.Direccion)
+		</dd>
+		<dt class="col-sm-2">
+			Dueño del inmueble
+		</dt>
+		<dd class="col-sm-10">
+			@(Model.Inmueble.Propietario)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Inquilino)
+		</dt>
+		<dd class="col-sm-10">
+			@(Model.Inquilino!.ToString())
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.FechaInicio)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.FechaInicio)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.FechaFin)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.FechaFin)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.MontoMensual)
+		</dt>
+		<dd class="col-sm-10">
+			$@Html.DisplayFor(model => model.MontoMensual)
+		</dd>
+	</dl>
+
+	<form asp-action="Terminate">
+		<input type="submit" value="Terminar" class="btn btn-danger" />
+	</form>
+</div>

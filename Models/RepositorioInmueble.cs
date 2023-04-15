@@ -236,7 +236,7 @@ public class RepositorioInmueble
 			LEFT JOIN contratos c ON i.id_inmueble = c.id_inmueble
 			LEFT JOIN enum_tipos t ON i.tipo = t.id_tipo
 			WHERE i.activo = TRUE
-			AND c.id_contrato IS NULL
+			AND (c.id_contrato IS NULL OR !c.activo)
 			AND (i.direccion LIKE @searchQuery
 			OR t.nombre_tipo LIKE @searchQuery
 			OR i.precio LIKE @searchQuery);";
@@ -276,7 +276,7 @@ public class RepositorioInmueble
 			LEFT JOIN contratos c ON i.id_inmueble = c.id_inmueble
 			LEFT JOIN enum_tipos t ON i.tipo = t.id_tipo
 			WHERE i.activo = TRUE
-			AND (c.id_contrato IS NULL OR c.id_contrato = @id)
+			AND (c.id_contrato IS NULL OR c.id_contrato = @id OR !c.activo)
 			AND (i.direccion LIKE @searchQuery
 			OR t.nombre_tipo LIKE @searchQuery
 			OR i.precio LIKE @searchQuery);";

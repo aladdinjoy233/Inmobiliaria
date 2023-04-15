@@ -5,10 +5,9 @@
 }
 
 <div class="d-flex align-items-center justify-content-between">
-	<h1>Contratos</h1>
+	<h1>Contratos expirados</h1>
 	<div class="group">
-		<a asp-action="Expired" class="btn btn-sm btn-secondary">Ver contratos expirados</a>
-		<a asp-action="Create" class="btn btn-sm btn-primary">Crear Nuevo</a>
+		<a asp-action="Index" class="btn btn-sm btn-secondary">Ver contratos validos</a>
 	</div>
 </div>
 
@@ -55,17 +54,8 @@
 					$@Html.DisplayFor(modelItem => item.MontoMensual)
 				</td>
 				<td>
-					<a href='@Url.Action("Edit", new { id = item.IdContrato })' class="btn btn-sm btn-light">
-						<i class="fa-solid fa-pencil"></i>
-					</a>
 					<a href='@Url.Action("Details", new { id = item.IdContrato })' class="btn btn-sm btn-light">
 						<i class="fa-solid fa-circle-info"></i>
-					</a>
-					<a href='@Url.Action("Terminate", new { id = item.IdContrato })' class="btn btn-sm btn-light">
-						<i class="fa-solid fa-xmark"></i>
-					</a>
-					<a href='@Url.Action("Delete", new { id = item.IdContrato })' class="btn btn-sm btn-light">
-						<i class="fa-solid fa-trash"></i>
 					</a>
 				</td>
 			</tr>

@@ -9,3 +9,14 @@ setTimeout(() => {
 		divToHide.remove();
 	}
 }, 7000);
+
+var closeWarning = document.getElementById("close-warning-btn");
+if (closeWarning) {
+	closeWarning.addEventListener("click", () => {
+		var divToHide = document.getElementById("info-notification");
+		if (divToHide) {
+			divToHide.style.display = "none";
+			divToHide.remove();
+		}
+	});
+}

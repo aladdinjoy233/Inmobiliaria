@@ -29,7 +29,15 @@ namespace Inmobiliaria.Controllers
 		public ActionResult Index()
 		{
 			ViewBag.Success = TempData["Success"];
-			var lista = Repo.GetContratos();
+			ViewBag.Info = TempData["Info"];
+			var lista = Repo.GetContratosValidos();
+			return View(lista);
+		}
+
+		// GET: Contratos/Expired
+		public ActionResult Expired()
+		{
+			var lista = Repo.GetContratosExpirados();
 			return View(lista);
 		}
 
@@ -140,6 +148,33 @@ namespace Inmobiliaria.Controllers
 			{
 				contrato.Inmueble = RepoInmueble.GetInmueblePorId(contrato.InmuebleId);
 				return View(contrato);
+			}
+		}
+
+		// GET: Contratos/Terminate/5
+		public ActionResult Terminate(int id)
+		{
+			var contrato = Repo.GetContratoPorId(id);
+			contrato.Inmueble = RepoInmueble.GetInmueblePorId(contrato.InmuebleId);
+			return View(contrato);
+		}
+
+		// POST: Contratos/Terminate/5
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult Terminate(int id, Contrato contrato)
+		{
+			try
+			{
+				var multa = Repo.Terminar(id);
+				TempData["Info"] = $"Contrato terminado correctamente. Multa a pagar: ${multa}";
+				return RedirectToAction(nameof(Index));
+			}
+			catch
+			{
+				var contratoDB = Repo.GetContratoPorId(id);
+				contratoDB.Inmueble = RepoInmueble.GetInmueblePorId(contratoDB.InmuebleId);
+				return View(contratoDB);
 			}
 		}
 

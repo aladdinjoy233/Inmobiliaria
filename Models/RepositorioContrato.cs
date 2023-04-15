@@ -13,8 +13,8 @@ public class RepositorioContrato
 		using (MySqlConnection connection = new MySqlConnection(connectionString))
 		{
 			String query = @"INSERT INTO contratos
-			(id_inmueble, id_inquilino, fecha_inicio, fecha_fin, monto_mensual)
-			VALUES (@id_inmueble, @id_inquilino, @fecha_inicio, @fecha_fin, @monto_mensual);
+			(id_inmueble, id_inquilino, fecha_inicio, fecha_fin, monto_mensual, activo)
+			VALUES (@id_inmueble, @id_inquilino, @fecha_inicio, @fecha_fin, @monto_mensual, 1);
 			SELECT LAST_INSERT_ID();";
 
 			using (var command = new MySqlCommand(query, connection))
@@ -53,6 +53,54 @@ public class RepositorioContrato
 		return res;
 	}
 
+	public decimal Terminar(int id)
+	{
+		decimal multa = 0;
+		using (MySqlConnection connection = new MySqlConnection(connectionString))
+		{
+			var query = @"SELECT fecha_inicio, fecha_fin, monto_mensual
+			FROM contratos
+			WHERE id_contrato = @id;
+
+			UPDATE contratos
+			SET activo = 0, fecha_fin = @fecha_fin
+			WHERE id_contrato = @id;";
+
+			using (var command = new MySqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@id", id);
+				command.Parameters.AddWithValue("@fecha_fin", DateTime.Now);
+				connection.Open();
+
+				using (var reader = command.ExecuteReader())
+				{
+
+					if (reader.Read())
+					{
+						var fechaInicio = Convert.ToDateTime(reader["fecha_inicio"]);
+						var fechaFin = Convert.ToDateTime(reader["fecha_fin"]);
+						var montoMensual = Convert.ToDecimal(reader["monto_mensual"]);
+
+						int totalDays = (fechaFin - fechaInicio).Days;
+						int daysInContract = totalDays < 0 ? 0 : totalDays;
+						int daysElapsed = (DateTime.Now - fechaInicio).Days;
+
+						if (daysElapsed < daysInContract / 2)
+						{
+							multa = montoMensual * 2;
+						}
+						else
+						{
+							multa = montoMensual;
+						}
+					}
+				}
+				connection.Close();
+			}
+		}
+		return multa;
+	}
+
 	public int Modificar(Contrato contrato)
 	{
 		int res = 0;
@@ -79,7 +127,7 @@ public class RepositorioContrato
 		return res;
 	}
 
-	public List<Contrato> GetContratos()
+	public List<Contrato> GetContratosValidos()
 	{
 		List<Contrato> contratos = new List<Contrato>();
 		using (MySqlConnection connection = new MySqlConnection(connectionString))
@@ -87,7 +135,53 @@ public class RepositorioContrato
 			var query = @"SELECT id_contrato, c.id_inmueble, c.id_inquilino, fecha_inicio, fecha_fin, monto_mensual, i.direccion, iq.nombre, iq.apellido
 			FROM contratos c
 			INNER JOIN inmuebles i ON c.id_inmueble = i.id_inmueble
- 			INNER JOIN inquilinos iq ON c.id_inquilino = iq.id_inquilino;";
+ 			INNER JOIN inquilinos iq ON c.id_inquilino = iq.id_inquilino
+			WHERE fecha_fin >= CURDATE() AND c.activo = 1;";
+
+			using (var command = new MySqlCommand(query, connection))
+			{
+				connection.Open();
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						Contrato contrato = new Contrato
+						{
+							IdContrato = reader.GetInt32("id_contrato"),
+							InmuebleId = reader.GetInt32("id_inmueble"),
+							Inmueble = new Inmueble
+							{
+								Direccion = reader.GetString("direccion"),
+							},
+							InquilinoId = reader.GetInt32("id_inquilino"),
+							Inquilino = new Inquilino
+							{
+								Nombre = reader.GetString("nombre"),
+								Apellido = reader.GetString("apellido"),
+							},
+							FechaInicio = reader.GetDateTime("fecha_inicio"),
+							FechaFin = reader.GetDateTime("fecha_fin"),
+							MontoMensual = reader.GetDecimal("monto_mensual")
+						};
+						contratos.Add(contrato);
+					}
+				}
+			}
+			connection.Close();
+		}
+		return contratos;
+	}
+
+	public List<Contrato> GetContratosExpirados()
+	{
+		List<Contrato> contratos = new List<Contrato>();
+		using (MySqlConnection connection = new MySqlConnection(connectionString))
+		{
+			var query = @"SELECT id_contrato, c.id_inmueble, c.id_inquilino, fecha_inicio, fecha_fin, monto_mensual, i.direccion, iq.nombre, iq.apellido
+			FROM contratos c
+			INNER JOIN inmuebles i ON c.id_inmueble = i.id_inmueble
+ 			INNER JOIN inquilinos iq ON c.id_inquilino = iq.id_inquilino
+			WHERE fecha_fin < CURDATE() OR c.activo = 0;";
 
 			using (var command = new MySqlCommand(query, connection))
 			{
