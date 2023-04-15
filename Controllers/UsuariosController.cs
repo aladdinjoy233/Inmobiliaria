@@ -108,13 +108,15 @@ namespace Inmobiliaria.Controllers
 			}
 		}
 
-		// GET: Usuarios/Perfil/5
+		// GET: Usuarios/Perfil
 		[Authorize]
-		public ActionResult Perfil(int id)
+		public ActionResult Perfil()
 		{
 			ViewData["Title"] = "Mi perfil";
 			ViewBag.Roles = Usuario.ObtenerRoles();
-			var usuario = Repo.GetUsuarioPorId(id);
+			var IdUsuario = Convert.ToInt32(User.FindFirst("IdUsuario")?.Value);
+			var usuario = Repo.GetUsuarioPorId(IdUsuario);
+			TempData["Perfil"] = true;
 			return View("Edit", usuario);
 		}
 
@@ -122,6 +124,7 @@ namespace Inmobiliaria.Controllers
 		[Authorize(Policy = "Administrador")]
 		public ActionResult Edit(int id)
 		{
+			TempData["Perfil"] = false;
 			ViewBag.Roles = Usuario.ObtenerRoles();
 			var usuario = Repo.GetUsuarioPorId(id);
 			return View(usuario);
@@ -147,9 +150,8 @@ namespace Inmobiliaria.Controllers
 
 			try
 			{
-
 				var usuarioDB = Repo.GetUsuarioPorId(usuario.IdUsuario);
-				var modoEdicionDePerfil = User.Identity.Name == usuarioDB.Email;
+				var modoEdicionDePerfil = TempData.ContainsKey("Perfil") && (bool)TempData.Peek("Perfil") == true;
 
 				if (usuario.Password != null)
 				{
@@ -170,7 +172,6 @@ namespace Inmobiliaria.Controllers
 					));
 					usuario.Password = hashed;
 
-					Console.WriteLine(usuario.Password);
 					Repo.ModificarContraseña(usuario);
 				}
 

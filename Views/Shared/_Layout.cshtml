@@ -54,7 +54,7 @@
 									{
 										<li><a class="dropdown-item text-center" asp-area="" asp-controller="Usuarios" asp-action="Index">Menejar Usuarios ✨</a></li>
 									}
-									<li><a class="dropdown-item text-center" asp-area="" asp-controller="Usuarios" asp-action="Perfil" asp-route-id='@User.FindFirst("IdUsuario")?.Value'>Editar Perfil</a></li>
+									<li><a class="dropdown-item text-center" asp-area="" asp-controller="Usuarios" asp-action="Perfil">Editar Perfil</a></li>
 									<li><a class="dropdown-item text-center" asp-area="" asp-controller="Usuarios" asp-action="Logout">Salir</a></li>
 								</ul>
 							</div>
@@ -70,12 +70,7 @@
 			@RenderBody()
 		</main>
 	</div>
-
-	<footer class="border-top footer text-muted">
-		<div class="container">
-			&copy; 2023 - Inmobiliaria
-		</div>
-	</footer>
+	
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
