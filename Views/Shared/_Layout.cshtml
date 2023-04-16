@@ -64,7 +64,7 @@
 		</nav>
 		}
 	</header>
-	<div class="content">
+	<div class="content" style='@(User.Identity.IsAuthenticated ? "" : "margin-left: 1rem")'>
 		<div class="scroll-content">
 			<div class="container">
 				<main role="main" style="position: relative;" class="pb-3">

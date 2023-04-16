@@ -6,21 +6,21 @@
 	var usuarioAvatar = Model.Avatar != null && Model.Avatar != "" ? Model.Avatar : "/img/user_avatar.jpg";
 }
 
-@if (User.Identity.Name == Model.Email)
-{
-	<a asp-controller="Home" asp-action="Index" class="btn btn-sm btn-light">
-		<i class="fa-solid fa-chevron-left"></i> Volver al inicio
-	</a>
-}
-else
-{
-	<a asp-action="Index" class="btn btn-sm btn-light">
-		<i class="fa-solid fa-chevron-left"></i> Volver a la lista
-	</a>
-}
-
 <div class="d-flex align-items-center justify-content-between">
 	<h1>Editar el usuario</h1>
+
+	@if (User.Identity.Name == Model.Email)
+	{
+		<a asp-controller="Home" asp-action="Index" class="btn btn-sm btn-light">
+			<i class="fa-solid fa-chevron-left"></i> Volver al inicio
+		</a>
+	}
+	else
+	{
+		<a asp-action="Index" class="btn btn-sm btn-light">
+			<i class="fa-solid fa-chevron-left"></i> Volver a la lista
+		</a>
+	}
 </div>
 
 <hr />

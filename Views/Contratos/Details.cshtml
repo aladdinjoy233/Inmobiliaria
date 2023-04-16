@@ -4,14 +4,18 @@
 	ViewData["Title"] = "Detalles";
 }
 
-<a asp-action="Index" class="btn btn-sm btn-light">
-	<i class="fa-solid fa-chevron-left"></i> Volver a la lista
-</a>
 <div class="d-flex align-items-center justify-content-between">
 	<h1>Detalles del contrato</h1>
-	<a href='@Url.Action("Edit", new { id = Model.IdContrato })' class="btn btn-sm btn-primary">
-		Editar <i class="fa-solid fa-pencil"></i>
-	</a>
+
+	<div class="group">
+		<a asp-action="Index" class="btn btn-sm btn-light">
+			<i class="fa-solid fa-chevron-left"></i> Volver a la lista
+		</a>
+
+		<a href='@Url.Action("Edit", new { id = Model.IdContrato })' class="btn btn-sm btn-primary">
+			Editar <i class="fa-solid fa-pencil"></i>
+		</a>
+	</div>
 </div>
 
 <div>
