@@ -87,11 +87,18 @@ namespace Inmobiliaria.Controllers
 		// GET: Contratos/Edit/5
 		public ActionResult Edit(int id)
 		{
+			var contrato = Repo.GetContratoPorId(id);
+
+			if (!contrato.Activo)
+			{
+				return RedirectToAction(nameof(Index));
+			}
+
 			ViewBag.Inmuebles = RepoInmueble.GetInmueblesParaAlquilar();
 			ViewBag.Inquilinos = RepoInquilino.GetInquilinos();
-			var contrato = Repo.GetContratoPorId(id);
 			ViewBag.InmuebleActual = RepoInmueble.GetInmueblePorId(contrato.InmuebleId);
 			return View(contrato);
+
 		}
 
 		// POST: Contratos/Edit/5
@@ -129,6 +136,12 @@ namespace Inmobiliaria.Controllers
 		public ActionResult Delete(int id)
 		{
 			var contrato = Repo.GetContratoPorId(id);
+
+			if (!contrato.Activo)
+			{
+				return RedirectToAction(nameof(Index));
+			}
+			
 			contrato.Inmueble = RepoInmueble.GetInmueblePorId(contrato.InmuebleId);
 			return View(contrato);
 		}
@@ -155,6 +168,12 @@ namespace Inmobiliaria.Controllers
 		public ActionResult Terminate(int id)
 		{
 			var contrato = Repo.GetContratoPorId(id);
+
+			if (!contrato.Activo)
+			{
+				return RedirectToAction(nameof(Index));
+			}
+
 			contrato.Inmueble = RepoInmueble.GetInmueblePorId(contrato.InmuebleId);
 			return View(contrato);
 		}

@@ -30,5 +30,7 @@ public class Contrato
 	[Display(Name = "Monto Mensual")]
 	[Required (ErrorMessage = "El monto mensual es requerido")]
 	public decimal ? MontoMensual { get; set; }
+
+	public bool Activo { get; set; }
 	
 }
