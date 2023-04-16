@@ -43,7 +43,7 @@
 					@Html.DisplayFor(modelItem => item.Numero)
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => item.Fecha)
+					@(item.Fecha.ToShortDateString())
 				</td>
 				<td>
 					$@Html.DisplayFor(modelItem => item.Importe)
