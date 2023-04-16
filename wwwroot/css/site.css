@@ -1,30 +1,190 @@
-html {
-	font-size: 14px;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+/* ======================= */
+/* Global CSS Reset styles */
+/* ======================= */
+
+:root {
+	--clr-txt: #2c2a29;
 }
 
-@media (min-width: 768px) {
-	html {
-		font-size: 16px;
-	}
+*, *:before, *:after { box-sizing: border-box; }
+
+html {
+	font-size: 16px;
+	position: relative;
+	min-height: 100%;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
 	box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-html {
-	position: relative;
-	min-height: 100%;
-}
-
-body {
-	margin-bottom: 60px;
-}
-
 img {
 	width: auto;
 	height: 100%;
 }
+
+body {
+	font-family: 'Roboto', sans-serif;
+
+	/* Make the side nav */
+	display: flex;
+	align-items: center;
+	color: var(--clr-txt);
+	background-color: #fbf7f4;
+	height: 100vh;
+}
+
+ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+a { text-decoration: none; color: inherit; }
+a:hover { color: inherit; }
+
+/* ========== */
+/* Scroll-bar */
+/* ========== */
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: white;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #f5e5d9;
+	border-radius: 1rem;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #eeded2;
+}
+
+/* ========== */
+/* Navigation */
+/* ========== */
+
+.navbar {
+	background-color: #fbf7f4;
+	height: 100vh;
+	width: 13rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	/* text-align: center; */
+	padding: 0;
+	margin: 0;
+}
+
+.navbar .navbar-container {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.navbar .nav-group {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 3rem;
+	margin-top: 2rem;
+}
+
+.navbar .nav-group.bottom {
+	margin-bottom: 1rem;
+}
+
+.nav-logo {
+	margin: 0;
+	font-weight: 900;
+	font-size: 1.7rem;
+	color: inherit;
+}
+
+.navbar ul.nav-list {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1rem;
+}
+
+.navbar ul.nav-list li {
+	width: 100%;
+}
+
+.navbar ul.nav-list li a {
+	color: inherit;
+	display: inline-block;
+	width: 100%;
+	padding: 0.5rem 1.5rem;
+	font-weight: 500;
+	background: linear-gradient(to left, transparent 50%, #eee6e2 50%);
+	background-size: 200%;
+	background-position: right;
+	transition: background-position 0.25s;
+}
+
+.navbar ul.nav-list li a:hover {
+	background-position: left;
+}
+
+.navbar ul.nav-list li a i {
+	margin-right: 0.5rem;
+	width: 1.25rem;
+}
+
+.navbar ul.nav-list li.profile-item {
+	display: flex;
+	justify-content: center;
+	cursor: pointer;
+}
+
+.navbar ul.nav-list li.profile-item a.user-profile {
+	width: 3rem;
+	height: 3rem;
+	padding: 0;
+	background: none;
+	transition: none;
+}
+	
+/* ======= */
+/* Content */
+/* ======= */
+.content {
+	background-color: white;
+	overflow: hidden;
+	width: 100%;
+	height: calc(100% - 2rem);
+	margin: 1rem 1rem 1rem 0;
+	border-radius: 1rem;
+}
+
+.content .scroll-content {
+	overflow-y: scroll;
+	width: 100%;
+	height: 100%;
+}
+
+.content .container {
+	margin-top: 1rem;
+}
+
+/* ================ */
+/* Searchbar inputs */
+/* ================ */
 
 .search-results {
 	border-bottom-left-radius: 0.25rem;
@@ -59,6 +219,10 @@ img {
 	color: white;
 }
 
+/* ========================== */
+/* Profile picture containers */
+/* ========================== */
+
 .user-profile {
 	border-radius: 10rem;
 	width: 2rem;
@@ -86,6 +250,10 @@ img {
 	background-color: #ddd;
 }
 
+/* ====== */
+/* Alerts
+/* ====== */
+
 #notification {
 	position: absolute;
 	width: 100%;
@@ -98,6 +266,10 @@ img {
 	0% { opacity: 1; }
 	100% { opacity: 0; }
 }
+
+/* ============ */
+/* Table styles */
+/* ============ */
 
 tr {
 	vertical-align: middle;

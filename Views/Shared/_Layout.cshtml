@@ -16,78 +16,81 @@
 
 <body>
 	<header>
-		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-			<div class="container">
-				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Inmobiliaria</a>
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-					aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-					@if (User.Identity.IsAuthenticated)
-					{
-						<ul class="navbar-nav flex-grow-1 align-items-center">
-							<li class="nav-item">
-								<a class="nav-link text-dark" asp-area="" asp-controller="Propietarios" asp-action="Index">Propietarios</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link text-dark" asp-area="" asp-controller="Inquilinos" asp-action="Index">Inquilinos</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link text-dark" asp-area="" asp-controller="Inmuebles" asp-action="Index">Inmuebles</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link text-dark" asp-area="" asp-controller="Contratos" asp-action="Index">Contratos</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link text-dark" asp-area="" asp-controller="Pagos" asp-action="Index">Pagos</a>
-							</li>
+		@if (User.Identity.IsAuthenticated)
+		{
+		<nav class="navbar navbar-light">
+			<div class="navbar-container">
 
-							<div class="dropdown" style="margin-left: auto;">
-								<button class="btn btn-link" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-									<div class="user-profile">
-										<img src='@(User.FindFirst("Avatar")?.Value != null && User.FindFirst("Avatar")?.Value != "" ? User.FindFirst("Avatar")?.Value : "/img/user_avatar.jpg")'>
-									</div>
-								</button>
-								<ul class="dropdown-menu" style="left: 50%; transform: translateX(-50%);" aria-labelledby="dropdownMenuButton">
-									@if (User.IsInRole("Administrador"))
-									{
-										<li><a class="dropdown-item text-center" asp-area="" asp-controller="Usuarios" asp-action="Index">Menejar Usuarios ✨</a></li>
-									}
-									<li><a class="dropdown-item text-center" asp-area="" asp-controller="Usuarios" asp-action="Perfil">Editar Perfil</a></li>
-									<li><a class="dropdown-item text-center" asp-area="" asp-controller="Usuarios" asp-action="Logout">Salir</a></li>
-								</ul>
-							</div>
-						</ul>
-					}
-					
+				<div class="nav-group">
+					<a class="nav-logo" asp-area="" asp-controller="Home" asp-action="Index">Inmobiliaria</a>
+
+					<ul class="nav-list">
+						<li>
+							<a asp-area="" asp-controller="Propietarios" asp-action="Index"><i class="fa-solid fa-user-tie"></i>Propietarios</a>
+						</li>
+						<li>
+							<a asp-area="" asp-controller="Inquilinos" asp-action="Index"><i class="fa-solid fa-people-roof"></i>Inquilinos</a>
+						</li>
+						<li>
+							<a asp-area="" asp-controller="Inmuebles" asp-action="Index"><i class="fa-solid fa-house"></i>Inmuebles</a>
+						</li>
+						<li>
+							<a asp-area="" asp-controller="Contratos" asp-action="Index"><i class="fa-solid fa-file-signature"></i>Contratos</a>
+						</li>
+						<li>
+							<a asp-area="" asp-controller="Pagos" asp-action="Index"><i class="fa-solid fa-hand-holding-dollar"></i>Pagos</a>
+						</li>
+						@if (User.IsInRole("Administrador"))
+						{
+							<li>
+								<a asp-area="" asp-controller="Usuarios" asp-action="Index"><i class="fa-solid fa-users"></i>Usuarios</a>
+							</li>
+						}
+					</ul>
 				</div>
+
+				<div class="nav-group bottom">
+					<ul class="nav-list">
+						<li class="profile-item">
+							<a class="user-profile" asp-area="" asp-controller="Usuarios" asp-action="Perfil">
+								<img src='@(User.FindFirst("Avatar")?.Value != null && User.FindFirst("Avatar")?.Value != "" ? User.FindFirst("Avatar")?.Value : "/img/user_avatar.jpg")'>
+							</a>
+						</li>
+						<li><a asp-area="" asp-controller="Usuarios" asp-action="Logout"><i class="fa-solid fa-right-from-bracket"></i>Salir</a></li>
+					</ul>
+				</div>
+
 			</div>
 		</nav>
+		}
 	</header>
-	<div class="container">
-		<main role="main" style="position: relative;" class="pb-3">
-			@if (ViewBag.Success != null) // Show success message
-			{
-				<div id="notification" class="alert alert-success fade show d-flex justify-content-between" role="alert">
-					<span><i class="fa-solid fa-thumbs-up"></i> @ViewBag.Success</span>
-				</div>
-			}
-			else if (ViewBag.Error != null) // Show error message
-			{
-				<div id="notification" class="alert alert-danger fade show d-flex justify-content-between" role="alert">
-					<span><strong>Error!</strong> @ViewBag.Error</span>
-				</div>
-			}
-			else if (ViewBag.Info != null) // Show error message
-			{
-				<div id="info-notification" class="alert alert-warning fade show d-flex justify-content-between" role="alert">
-					<span><i class="fa-solid fa-circle-info"></i> @ViewBag.Info</span>
-					<span id="close-warning-btn" style="cursor: pointer;"><i class="fa-solid fa-xmark"></i></span>
-				</div>
-			}
-			@RenderBody()
-		</main>
+	<div class="content">
+		<div class="scroll-content">
+			<div class="container">
+				<main role="main" style="position: relative;" class="pb-3">
+					@if (ViewBag.Success != null) // Show success message
+					{
+						<div id="notification" class="alert alert-success fade show d-flex justify-content-between" role="alert">
+							<span><i class="fa-solid fa-thumbs-up"></i> @ViewBag.Success</span>
+						</div>
+					}
+					else if (ViewBag.Error != null) // Show error message
+					{
+						<div id="notification" class="alert alert-danger fade show d-flex justify-content-between" role="alert">
+							<span><strong>Error!</strong> @ViewBag.Error</span>
+						</div>
+					}
+					else if (ViewBag.Info != null) // Show error message
+					{
+						<div id="info-notification" class="alert alert-warning fade show d-flex justify-content-between" role="alert">
+							<span><i class="fa-solid fa-circle-info"></i> @ViewBag.Info</span>
+							<span id="close-warning-btn" style="cursor: pointer;"><i class="fa-solid fa-xmark"></i></span>
+						</div>
+					}
+					@RenderBody()
+				</main>
+			</div>
+		</div>
 	</div>
 	
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
