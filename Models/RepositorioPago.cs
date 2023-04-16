@@ -76,7 +76,7 @@ public class RepositorioPago
 		return res;
 	}
 
-	public List<Pago> GetPagos()
+	public List<Pago> GetPagosValidos()
 	{
 		List<Pago> pagos = new List<Pago>();
 		using (MySqlConnection connection = new MySqlConnection(connectionString))
@@ -85,7 +85,53 @@ public class RepositorioPago
 			FROM pagos p
 			INNER JOIN contratos c ON p.id_contrato = c.id_contrato
 			INNER JOIN inmuebles i ON c.id_inmueble = i.id_inmueble
-			INNER JOIN inquilinos iq ON c.id_inquilino = iq.id_inquilino;";
+			INNER JOIN inquilinos iq ON c.id_inquilino = iq.id_inquilino
+			WHERE c.activo = 1;";
+
+			using (var command = new MySqlCommand(query, connection))
+			{
+				connection.Open();
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					pagos.Add(new Pago
+					{
+						IdPago = Convert.ToInt32(reader["id_pago"]),
+						ContratoId = Convert.ToInt32(reader["id_contrato"]),
+						Contrato = new Contrato
+						{
+							Inmueble = new Inmueble
+							{
+								Direccion = reader.GetString("direccion"),
+							},
+							Inquilino = new Inquilino
+							{
+								Nombre = reader.GetString("nombre"),
+								Apellido = reader.GetString("apellido"),
+							}
+						},
+						Numero = Convert.ToInt32(reader["numero"]),
+						Fecha = Convert.ToDateTime(reader["fecha"]),
+						Importe = Convert.ToDecimal(reader["importe"])
+					});
+				}
+			}
+			connection.Close();
+		}
+		return pagos;
+	}
+
+	public List<Pago> GetPagosExpirados()
+	{
+		List<Pago> pagos = new List<Pago>();
+		using (MySqlConnection connection = new MySqlConnection(connectionString))
+		{
+			var query = @"SELECT id_pago, p.id_contrato, numero, fecha, importe, i.direccion, iq.nombre, iq.apellido
+			FROM pagos p
+			INNER JOIN contratos c ON p.id_contrato = c.id_contrato
+			INNER JOIN inmuebles i ON c.id_inmueble = i.id_inmueble
+			INNER JOIN inquilinos iq ON c.id_inquilino = iq.id_inquilino
+			WHERE c.activo = 0;";
 
 			using (var command = new MySqlCommand(query, connection))
 			{

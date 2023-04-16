@@ -25,7 +25,15 @@ namespace Inmobiliaria.Controllers
 		public ActionResult Index()
 		{
 			ViewBag.Success = TempData["Success"];
-			var lista = Repo.GetPagos();
+			var lista = Repo.GetPagosValidos();
+			return View(lista);
+		}
+
+		// GET: Pagos/Expired
+		public ActionResult Expired()
+		{
+			ViewBag.Success = TempData["Success"];
+			var lista = Repo.GetPagosExpirados();
 			return View(lista);
 		}
 
