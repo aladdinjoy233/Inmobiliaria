@@ -14,42 +14,29 @@
 	</a>
 </div>
 
-<div>
+<div class="detail-container">
 	<hr />
-	<dl class="row">
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Nombre)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Nombre)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Apellido)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Apellido)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Email)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Email)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Avatar)
-		</dt>
-		<dd class="col-sm-10">
-			<div class="form-avatar">
-				<img src="@usuarioAvatar">
-			</div>
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Rol)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.RolNombre)
-		</dd>
-	</dl>
+	<p>
+		<div class="form-avatar">
+			<img src="@usuarioAvatar">
+		</div>
+	</p>
+	<p>
+		<strong>@Html.DisplayNameFor(model => model.Nombre): </strong>
+		@Html.DisplayFor(model => model.Nombre)
+	</p>
+	<p>
+		<strong>@Html.DisplayNameFor(model => model.Apellido): </strong>
+		@Html.DisplayFor(model => model.Apellido)
+	</p>
+	<p>
+		<strong>@Html.DisplayNameFor(model => model.Email): </strong>
+		@Html.DisplayFor(model => model.Email)
+	</p>
+	<p>
+		<strong>@Html.DisplayNameFor(model => model.Rol): </strong>
+		@Html.DisplayFor(model => model.RolNombre)
+	</p>
 
 	<form asp-action="Delete">
 		<input type="submit" value="Eliminar" class="btn btn-danger" />

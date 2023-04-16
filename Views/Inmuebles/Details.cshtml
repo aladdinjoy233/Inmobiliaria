@@ -18,62 +18,42 @@
 	</div>
 </div>
 
-<div>
+<div class="detail-container">
 	<hr />
-	<dl class="row">
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Propietario)
-		</dt>
-		<dd class="col-sm-10">
-			@(Model.Propietario!.ToString())
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Direccion)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Direccion)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Uso)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.UsoNombre)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Tipo)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.TipoNombre)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Ambientes)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Ambientes)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Latitud)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Latitud)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Longitud)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Longitud)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Precio)
-		</dt>
-		<dd class="col-sm-10">
-			$@Html.DisplayFor(model => model.Precio)
-		</dd>
-		<dt class="col-sm-2">
-			Estado
-		</dt>
-		<dd class="col-sm-10">
-			@(Model.Activo ? "Activo" : "Inactivo")
-		</dd>
-	</dl>
+	<p>
+		<strong>@Html.DisplayNameFor(model => model.Propietario): </strong>
+		@(Model.Propietario!.ToString())
+	</p>
+	<p>
+		<strong>@Html.DisplayNameFor(model => model.Direccion): </strong>
+		@Html.DisplayFor(model => model.Direccion)
+	</p>
+	<p>
+		<strong>@Html.DisplayNameFor(model => model.Uso): </strong>
+		@Html.DisplayFor(model => model.UsoNombre)
+	</p>
+	<p>
+		<strong>@Html.DisplayNameFor(model => model.Tipo): </strong>
+		@Html.DisplayFor(model => model.TipoNombre)
+	</p>
+	<p>
+		<strong>@Html.DisplayNameFor(model => model.Ambientes): </strong>
+		@Html.DisplayFor(model => model.Ambientes)
+	</p>
+	<p>
+		<strong>@Html.DisplayNameFor(model => model.Latitud): </strong>
+		@Html.DisplayFor(model => model.Latitud)
+	</p>
+	<p>
+		<strong>@Html.DisplayNameFor(model => model.Longitud): </strong>
+		@Html.DisplayFor(model => model.Longitud)
+	</p>
+	<p>
+		<strong>@Html.DisplayNameFor(model => model.Precio): </strong>
+		$@Html.DisplayFor(model => model.Precio)
+	</p>
+	<p>
+		<strong>Estado: </strong>
+		@(Model.Activo ? "Activo" : "Inactivo")
+	</p>
 </div>

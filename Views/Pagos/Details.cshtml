@@ -20,32 +20,22 @@
 	</div>
 </div>
 
-<div>
+<div class="detail-container">
 	<hr />
-	<dl class="row">
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.ContratoId)
-		</dt>
-		<dd class="col-sm-10">
-			@displayString
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Numero)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Numero)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Fecha)
-		</dt>
-		<dd class="col-sm-10">
-			@Model.Fecha.ToShortDateString()
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Importe)
-		</dt>
-		<dd class="col-sm-10">
-			$@Html.DisplayFor(model => model.Importe)
-		</dd>
-	</dl>
+	<p>
+		<strong>@Html.DisplayNameFor(model => model.ContratoId): </strong>
+		@displayString
+	</p>
+	<p>
+		<strong>@Html.DisplayNameFor(model => model.Numero): </strong>
+		@Html.DisplayFor(model => model.Numero)
+	</p>
+	<p>
+		<strong>@Html.DisplayNameFor(model => model.Fecha): </strong>
+		@Model.Fecha.ToShortDateString()
+	</p>
+	<p>
+		<strong>@Html.DisplayNameFor(model => model.Importe): </strong>
+		$@Html.DisplayFor(model => model.Importe)
+	</p>
 </div>

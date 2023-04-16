@@ -309,7 +309,8 @@ tbody, td, tfoot, th, thead, tr {
 	border-color: #e7e1dc;
 }
 
-table tbody tr:last-child td {
+table tbody tr:last-child td,
+table tbody tr:last-child th {
 	border-bottom-width: 0;
 }
 
@@ -450,4 +451,12 @@ form .form-group {
 
 .form-avatar:hover .change-avatar {
 	opacity: 1;
+}
+
+/* ===== */
+/* Other */
+/* ===== */
+
+.detail-container {
+	text-align: left;
 }
