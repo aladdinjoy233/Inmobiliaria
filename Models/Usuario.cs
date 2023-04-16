@@ -25,7 +25,7 @@ public class Usuario
 	[Required(ErrorMessage = "La contraseña es requerida")]
 	public string Password { get; set; } = "";
 
-	[Display(Name = "Confirmar contraseña")]
+	[Display(Name = "Confirmar password")]
 	[Required(ErrorMessage = "La confirmacion es requerida")]
 	public string ConfirmPassword { get; set; } = "";
 

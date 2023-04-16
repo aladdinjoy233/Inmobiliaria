@@ -6,7 +6,14 @@
 
 <div class="text-center">
 	<h1>@welcomeMessage</h1>
-	<p>Simplifica la gestión de tu inmobiliaria con nuestra solución!</p>
+	@if (User.Identity.IsAuthenticated)
+	{
+		<p>Ya puede empezar a utilizar el sistema!</p>
+	}
+	else
+	{
+		<p>Simplifica la gestión de tu inmobiliaria con nuestra solución!</p>
+	}
 </div>
 
 
