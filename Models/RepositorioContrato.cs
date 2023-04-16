@@ -35,6 +35,33 @@ public class RepositorioContrato
 		return res;
 	}
 
+	public int Renovar(Contrato contrato)
+	{
+		int res = 0;
+		using (MySqlConnection connection = new MySqlConnection(connectionString))
+		{
+			String query = @"INSERT INTO contratos
+			(id_inmueble, id_inquilino, fecha_inicio, fecha_fin, monto_mensual, activo)
+			VALUES (@id_inmueble, @id_inquilino, @fecha_inicio, @fecha_fin, @monto_mensual, 1);
+			SELECT LAST_INSERT_ID();";
+
+			using (var command = new MySqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@id_inmueble", contrato.InmuebleId);
+				command.Parameters.AddWithValue("@id_inquilino", contrato.InquilinoId);
+				command.Parameters.AddWithValue("@fecha_inicio", contrato.FechaInicio);
+				command.Parameters.AddWithValue("@fecha_fin", contrato.FechaFin);
+				command.Parameters.AddWithValue("@monto_mensual", contrato.MontoMensual);
+
+				connection.Open();
+				res = Convert.ToInt32(command.ExecuteScalar());
+				contrato.IdContrato = res;
+				connection.Close();
+			}
+		}
+		return res;
+	}
+
 	public int Eliminar(int id)
 	{
 		int res = 0;
@@ -267,6 +294,35 @@ public class RepositorioContrato
 		return contrato;
 	}
 
+	public List<int> GetContratosIdsPorInmueble(int idInmueble)
+	{
+		var result = new List<int>();
+		using (MySqlConnection connection = new MySqlConnection(connectionString))
+		{
+			var query = @"SELECT id_contrato
+			FROM contratos c
+			INNER JOIN inmuebles i ON c.id_inmueble = i.id_inmueble
+			WHERE c.id_inmueble = @idInmueble
+			AND c.activo = 1;";
+
+			using (var command = new MySqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@idInmueble", idInmueble);
+				connection.Open();
+
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						result.Add(reader.GetInt32("id_contrato"));
+					}
+				}
+				connection.Close();
+			}
+			return result;
+		}
+	}
+
 	public List<object> Buscar(string searchQuery)
 	{
 		var result = new List<object>();
@@ -277,10 +333,11 @@ public class RepositorioContrato
 			FROM contratos c
 			INNER JOIN inmuebles i ON c.id_inmueble = i.id_inmueble
  			INNER JOIN inquilinos iq ON c.id_inquilino = iq.id_inquilino
-			WHERE i.direccion LIKE @searchQuery
+			WHERE c.activo = 1
+			AND (i.direccion LIKE @searchQuery
 			OR iq.nombre LIKE @searchQuery
 			OR iq.apellido LIKE @searchQuery
-			OR iq.dni LIKE @searchQuery;";
+			OR iq.dni LIKE @searchQuery);";
 
 			using (var command = new MySqlCommand(query, connection))
 			{

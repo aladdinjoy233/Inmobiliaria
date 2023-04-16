@@ -54,6 +54,9 @@
 					$@Html.DisplayFor(modelItem => item.MontoMensual)
 				</td>
 				<td>
+					<a href='@Url.Action("Renovate", new { id = item.IdContrato })' class="btn btn-sm btn-light">
+						<i class="fa-solid fa-arrows-rotate"></i>
+					</a>
 					<a href='@Url.Action("Details", new { id = item.IdContrato })' class="btn btn-sm btn-light">
 						<i class="fa-solid fa-circle-info"></i>
 					</a>

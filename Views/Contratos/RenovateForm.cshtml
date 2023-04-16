@@ -1,0 +1,53 @@
+@model Inmobiliaria.Models.Contrato
+
+@{
+	ViewData["Title"] = "Renovar";
+
+	var listaInmuebles = (IList<Inmueble>)ViewBag.Inmuebles;
+	var listaInquilinos = (IList<Inquilino>)ViewBag.Inquilinos;
+	var inmuebleActual = (Inmueble)ViewBag.InmuebleActual;
+
+	var outputStringInmueble = $"{Model.Inmueble?.Direccion} ({Model.Inmueble?.TipoNombre}) - ${Model.Inmueble?.Precio}";
+	var selectedInmueble = new SelectedInfo(Model.InmuebleId, outputStringInmueble);
+
+	var outputStringInquilino = $"{Model.Inquilino?.Nombre} {Model.Inquilino?.Apellido} ({Model.Inquilino?.Dni})";
+	var selectedInquilino = new SelectedInfo(Model.InquilinoId, outputStringInquilino);
+}
+
+<a asp-action="Index" class="btn btn-sm btn-light">
+	<i class="fa-solid fa-chevron-left"></i> Volver a la lista
+</a>
+<div class="d-flex align-items-center justify-content-between">
+	<h1>Renovacion de un contrato</h1>
+</div>
+
+<hr />
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="RenovateForm">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+			@await Component.InvokeAsync("Search", new { searchUrl = Url.Action("BuscarConId", "Inmuebles", new {id = Model.IdContrato}), inputId = "InmuebleId", selected = selectedInmueble })
+			@await Component.InvokeAsync("Search", new { searchUrl = Url.Action("Buscar", "Inquilinos"), inputId = "InquilinoId", selected = selectedInquilino })
+
+			<div class="form-group">
+				<label asp-for="FechaInicio" class="control-label"></label>
+				<input asp-for="FechaInicio" type="date" class="form-control" />
+				<span asp-validation-for="FechaInicio" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="FechaFin" class="control-label"></label>
+				<input asp-for="FechaFin" type="date" class="form-control" />
+				<span asp-validation-for="FechaFin" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="MontoMensual" class="control-label"></label>
+				<input asp-for="MontoMensual" type="number" step="0.01" class="form-control" />
+				<span asp-validation-for="MontoMensual" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Renovar" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
+</div>
