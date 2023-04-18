@@ -67,7 +67,7 @@
 	<div class="content" style='@(User.Identity.IsAuthenticated ? "" : "margin-left: 1rem")'>
 		<div class="scroll-content">
 			<div class="container">
-				<main role="main" style="position: relative;" class="pb-3">
+				<main role="main" class="pb-3">
 					@if (ViewBag.Success != null) // Show success message
 					{
 						<div id="notification" class="alert alert-success fade show d-flex justify-content-between" role="alert">
