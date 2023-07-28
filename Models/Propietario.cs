@@ -20,6 +20,7 @@ public class Propietario
 
 	public string ? Correo { get; set; }
 
+	public List<Inmueble> ? Inmuebles { get; set; }
 
 	public override string ToString()
 	{

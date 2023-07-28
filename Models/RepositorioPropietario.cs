@@ -145,6 +145,57 @@ public class RepositorioPropietario
 		return propietario;
 	}
 
+	public Propietario? GetDetallePropietario(int id)
+	{
+		Propietario? propietario = null;
+		using (MySqlConnection connection = new MySqlConnection(connectionString))
+		{
+			var query = @"SELECT p.id_propietario as id, dni, apellido, nombre, telefono, correo, i.id_inmueble, i.direccion, i.tipo, i.precio
+			FROM propietarios p
+			LEFT JOIN inmuebles i ON p.id_propietario = i.id_propietario
+			WHERE p.id_propietario = @id;";
+
+			using (var command = new MySqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@id", id);
+				connection.Open();
+				using (var reader = command.ExecuteReader())
+				{
+					if (reader.Read())
+					{
+						var correo = reader["correo"];
+						propietario = new Propietario
+						{
+							IdPropietario = reader.GetInt32("id"),
+							Dni           = reader.GetString("dni"),
+							Apellido      = reader.GetString("apellido"),
+							Nombre        = reader.GetString("nombre"),
+							Telefono      = reader.GetString("telefono"),
+							Correo        = correo == DBNull.Value ? null : correo.ToString(),
+							Inmuebles     = new List<Inmueble>()
+						};
+
+						do
+						{
+							if (!reader.IsDBNull(reader.GetOrdinal("id_inmueble")))
+							{
+								propietario.Inmuebles.Add(new Inmueble
+								{
+									IdInmueble = reader.GetInt32("id_inmueble"),
+									Direccion  = reader.GetString("direccion"),
+									Tipo       = reader.GetInt32("tipo"),
+									Precio     = reader.GetInt32("precio")
+								});
+							}
+						} while (reader.Read());
+					}
+				}
+			}
+			connection.Close();
+		}
+		return propietario;
+	}
+
 	public List<object> Buscar(string searchQuery)
 	{
 		var result = new List<object>();

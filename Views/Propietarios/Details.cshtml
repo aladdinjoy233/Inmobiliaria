@@ -40,4 +40,50 @@
 		<strong>@Html.DisplayNameFor(model => model.Correo): </strong>
 		@(String.IsNullOrEmpty(Model.Correo) ? "N/A" : Html.DisplayFor(model => Model.Correo))
 	</p>
+
+	@if (Model.Inmuebles != null && Model.Inmuebles.Count > 0)
+	{
+		<strong>Inmuebles del propietario: </strong>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>
+						Dirección
+					</th>
+					<th>
+						Tipo
+					</th>
+					<th>
+						Precio
+					</th>
+					<th>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var inmueble in Model.Inmuebles)
+				{
+					<tr>
+						<td>
+							@Html.DisplayFor(modelItem => inmueble.Direccion)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => inmueble.TipoNombre)
+						</td>
+						<td>
+							$@Html.DisplayFor(modelItem => inmueble.Precio)
+						</td>
+						<td>
+							<a href='@Url.Action("Details", "Inmuebles", new { id = inmueble.IdInmueble })' class="btn btn-sm btn-light">
+								<i class="fa-solid fa-arrow-up-right-from-square"></i>
+							</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
+	else {
+		<p><strong>Este propietario no posee inmuebles.</strong></p>
+	}
 </div>
