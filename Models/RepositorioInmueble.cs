@@ -132,6 +132,51 @@ public class RepositorioInmueble
 		return inmuebles;
 	}
 
+	public List<Inmueble> GetDisponibles()
+	{
+		List<Inmueble> inmuebles = new List<Inmueble>();
+		using (MySqlConnection connection = new MySqlConnection(connectionString))
+		{
+			var query = @"SELECT id_inmueble, i.id_propietario, direccion, uso, tipo, ambientes, latitud, longitud, precio, activo, p.nombre, p.apellido
+			FROM inmuebles i
+			INNER JOIN propietarios p ON i.id_propietario = p.id_propietario
+			WHERE activo = 1;";
+
+			using (var command = new MySqlCommand(query, connection))
+			{
+				connection.Open();
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						Inmueble inmueble = new Inmueble
+						{
+							IdInmueble = reader.GetInt32("id_inmueble"),
+							PropietarioId = reader.GetInt32("id_propietario"),
+							Propietario = new Propietario
+							{
+								IdPropietario = reader.GetInt32("id_propietario"),
+								Nombre = reader.GetString("nombre"),
+								Apellido = reader.GetString("apellido")
+							},
+							Direccion = reader.GetString("direccion"),
+							Uso = reader.GetInt32("uso"),
+							Tipo = reader.GetInt32("tipo"),
+							Ambientes = reader.GetInt32("ambientes"),
+							Latitud = reader.GetDecimal("latitud"),
+							Longitud = reader.GetDecimal("longitud"),
+							Precio = reader.GetDecimal("precio"),
+							Activo = reader.GetBoolean("activo")
+						};
+						inmuebles.Add(inmueble);
+					}
+				}
+			}
+			connection.Close();
+		}
+		return inmuebles;
+	}
+
 	public List<Inmueble> GetInmueblesParaAlquilar()
 	{
 		List<Inmueble> inmuebles = new List<Inmueble>();

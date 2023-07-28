@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Habilitar al celu conectarse con la API
+builder.WebHost.UseUrls("http://localhost:5200", "http://*:5200");
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -12,6 +15,19 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 		options.LogoutPath       = "/Usuarios/Logout";
 		options.AccessDeniedPath = "/Home/Restringido";
 	});
+	// .AddJwtBearer(options =>
+	// {
+	// 	options.TokenValidationParameters = new TokenValidationParameters
+	// 	{
+	// 		ValidateIssuer = true,
+	// 		ValidateAudience = true,
+	// 		ValidateLifetime = true,
+	// 		ValidateIssuerSigningKey = true,
+	// 		ValidIssuer = builder.Configuration["Jwt:Issuer"],
+	// 		ValidAudience = builder.Configuration["Jwt:Audience"],
+	// 		IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+	// 	};
+	// });
 
 builder.Services.AddAuthorization(options =>
 {
@@ -29,6 +45,10 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Habilitar CORS
+app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
 app.UseStaticFiles();
 
 app.UseRouting();
