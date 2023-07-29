@@ -68,6 +68,8 @@ public class Inmueble
 
 	public bool Activo { get; set; }
 
+	public List<Contrato> ? Contratos { get; set; }
+
 	public string UsoNombre => Uso > 0 ? ((enUsos)Uso).ToString() : "";
 	public string TipoNombre => Tipo !> 0 ? ((enTipos)Tipo).ToString() : "";
 

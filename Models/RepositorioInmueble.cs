@@ -270,6 +270,74 @@ public class RepositorioInmueble
 		return inmueble;
 	}
 
+	public Inmueble? GetDetalleInmueble(int id)
+	{
+		Inmueble? inmueble = null;
+		using (MySqlConnection connection = new MySqlConnection(connectionString))
+		{
+			var query = @"SELECT i.id_inmueble, i.id_propietario, direccion, uso, tipo, ambientes, latitud, longitud, precio, i.activo, p.nombre, p.apellido, p.dni, c.id_contrato, c.fecha_inicio, c.fecha_fin, c.id_inquilino, iq.nombre as iq_nombre, iq.apellido as iq_apellido
+			FROM inmuebles i
+			INNER JOIN propietarios p ON i.id_propietario = p.id_propietario
+			LEFT JOIN contratos c ON i.id_inmueble = c.id_inmueble
+			LEFT JOIN inquilinos iq ON c.id_inquilino = iq.id_inquilino
+			WHERE i.id_inmueble = @id;";
+
+			using (var command = new MySqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@id", id);
+				connection.Open();
+				using (var reader = command.ExecuteReader())
+				{
+					if (reader.Read())
+					{
+						inmueble = new Inmueble
+						{
+							IdInmueble    = reader.GetInt32("id_inmueble"),
+							PropietarioId = reader.GetInt32("id_propietario"),
+							Propietario   = new Propietario
+							{
+								IdPropietario = reader.GetInt32("id_propietario"),
+								Nombre        = reader.GetString("nombre"),
+								Apellido      = reader.GetString("apellido"),
+								Dni           = reader.GetString("dni")
+							},
+							Direccion = reader.GetString("direccion"),
+							Uso       = reader.GetInt32("uso"),
+							Tipo      = reader.GetInt32("tipo"),
+							Ambientes = reader.GetInt32("ambientes"),
+							Latitud   = reader.GetDecimal("latitud"),
+							Longitud  = reader.GetDecimal("longitud"),
+							Precio    = reader.GetDecimal("precio"),
+							Activo    = reader.GetBoolean("activo"),
+							Contratos = new List<Contrato>()
+						};
+
+						do
+						{
+							if (!reader.IsDBNull(reader.GetOrdinal("id_contrato")))
+							{
+								inmueble.Contratos.Add(new Contrato
+								{
+									IdContrato = reader.GetInt32("id_contrato"),
+									FechaInicio = reader.GetDateTime("fecha_inicio"),
+									FechaFin = reader.GetDateTime("fecha_fin"),
+									InquilinoId = reader.GetInt32("id_inquilino"),
+									Inquilino = new Inquilino
+									{
+										Nombre = reader.GetString("iq_nombre"),
+										Apellido = reader.GetString("iq_apellido")
+									}
+								});
+							}
+						} while (reader.Read());
+					}
+				}
+			}
+			connection.Close();
+		}
+		return inmueble;
+	}
+
 	public List<object> Buscar(string searchQuery)
 	{
 		var result = new List<object>();

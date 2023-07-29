@@ -56,4 +56,53 @@
 		<strong>Estado: </strong>
 		@(Model.Activo ? "Activo" : "Inactivo")
 	</p>
+
+	@if(Model.Contratos != null && Model.Contratos.Count > 0)
+	{
+		<strong>Contratos del inmueble: </strong>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>
+						Fecha Inicio
+					</th>
+					<th>
+						Fecha Fin
+					</th>
+					<th>
+						Inquilino
+					</th>
+					<th>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var contrato in Model.Contratos)
+				{
+					<tr>
+						<td>
+							@(contrato.FechaInicio?.ToShortDateString())
+						</td>
+						<td>
+							@(contrato.FechaFin?.ToShortDateString())
+						</td>
+						<td>
+							<a href='@Url.Action("Details", "Inquilinos", new { id = contrato.InquilinoId })' class="btn btn-sm btn-link">
+								@(contrato.Inquilino!.ToString())
+							</a>
+						</td>
+						<td>
+							<a href='@Url.Action("Details", "Contratos", new { id = contrato.IdContrato })' class="btn btn-sm btn-light">
+								<i class="fa-solid fa-arrow-up-right-from-square"></i>
+							</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
+	else
+	{
+		<p><strong>Este inmueble no tiene contratos</strong></p>
+	}
 </div>
