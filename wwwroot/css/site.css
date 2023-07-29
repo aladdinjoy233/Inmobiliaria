@@ -460,3 +460,9 @@ form .form-group {
 .detail-container {
 	text-align: left;
 }
+
+#dateForm {
+	display: flex;
+	align-items: center;
+	gap: .5rem;
+}

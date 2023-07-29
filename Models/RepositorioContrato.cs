@@ -199,6 +199,74 @@ public class RepositorioContrato
 		return contratos;
 	}
 
+	public List<Contrato> GetContratosValidosDesdeHasta(DateTime? desde, DateTime? hasta)
+	{
+		List<Contrato> contratos = new List<Contrato>();
+		using (MySqlConnection connection = new MySqlConnection(connectionString))
+		{
+			string query = @"SELECT id_contrato, c.id_inmueble, c.id_inquilino, fecha_inicio, fecha_fin, monto_mensual, i.direccion, iq.nombre, iq.apellido
+				FROM contratos c
+				INNER JOIN inmuebles i ON c.id_inmueble = i.id_inmueble
+				INNER JOIN inquilinos iq ON c.id_inquilino = iq.id_inquilino
+				WHERE c.activo = 1 ";
+
+			if (desde != DateTime.MinValue && hasta != DateTime.MinValue) // Si estan ambos valores
+			{
+				query += "AND fecha_inicio >= @desde AND fecha_fin <= @hasta;";
+			}
+			else if (desde != DateTime.MinValue && hasta == DateTime.MinValue) // Si esta solo el "desde"
+			{
+				query += "AND fecha_inicio >= @desde;";
+			}
+			else if (hasta != DateTime.MinValue && desde == DateTime.MinValue) // Si esta solo el "hasta"
+			{
+				query += "AND fecha_fin <= @hasta;";
+			}
+
+			using (var command = new MySqlCommand(query, connection))
+			{
+				if (desde.HasValue)
+				{
+					command.Parameters.AddWithValue("@desde", desde.Value);
+				}
+
+				if (hasta.HasValue)
+				{
+					command.Parameters.AddWithValue("@hasta", hasta.Value);
+				}
+
+				connection.Open();
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						Contrato contrato = new Contrato
+						{
+							IdContrato = reader.GetInt32("id_contrato"),
+							InmuebleId = reader.GetInt32("id_inmueble"),
+							Inmueble = new Inmueble
+							{
+								Direccion = reader.GetString("direccion"),
+							},
+							InquilinoId = reader.GetInt32("id_inquilino"),
+							Inquilino = new Inquilino
+							{
+								Nombre = reader.GetString("nombre"),
+								Apellido = reader.GetString("apellido"),
+							},
+							FechaInicio = reader.GetDateTime("fecha_inicio"),
+							FechaFin = reader.GetDateTime("fecha_fin"),
+							MontoMensual = reader.GetDecimal("monto_mensual")
+						};
+						contratos.Add(contrato);
+					}
+				}
+			}
+			connection.Close();
+		}
+		return contratos;
+	}
+
 	public List<Contrato> GetContratosExpirados()
 	{
 		List<Contrato> contratos = new List<Contrato>();
