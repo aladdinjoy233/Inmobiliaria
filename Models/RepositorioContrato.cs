@@ -363,6 +363,73 @@ public class RepositorioContrato
 		return contrato;
 	}
 
+	public Contrato GetDetalleContrato(int id)
+	{
+		Contrato contrato = new Contrato();
+		using (MySqlConnection connection = new MySqlConnection(connectionString))
+		{
+			var query = @"SELECT c.id_contrato, c.id_inmueble, c.id_inquilino, fecha_inicio, fecha_fin, monto_mensual, i.direccion, i.tipo, i.precio, iq.nombre, iq.apellido, iq.dni, c.activo, p.id_pago, p.numero, p.fecha, p.importe
+			FROM contratos c
+			INNER JOIN inmuebles i ON c.id_inmueble = i.id_inmueble
+ 			INNER JOIN inquilinos iq ON c.id_inquilino = iq.id_inquilino
+			LEFT JOIN pagos p ON c.id_contrato = p.id_contrato
+			WHERE c.id_contrato = @id;";
+
+			using (var command = new MySqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@id", id);
+				connection.Open();
+				using (var reader = command.ExecuteReader())
+				{
+					if (reader.Read())
+					{
+						contrato = new Contrato
+						{
+							IdContrato = reader.GetInt32("id_contrato"),
+							InmuebleId = reader.GetInt32("id_inmueble"),
+							Inmueble = new Inmueble
+							{
+								IdInmueble = reader.GetInt32("id_inmueble"),
+								Direccion = reader.GetString("direccion"),
+								Tipo = reader.GetInt32("tipo"),
+								Precio = reader.GetDecimal("precio")
+							},
+							InquilinoId = reader.GetInt32("id_inquilino"),
+							Inquilino = new Inquilino
+							{
+								IdInquilino = reader.GetInt32("id_inquilino"),
+								Nombre = reader.GetString("nombre"),
+								Apellido = reader.GetString("apellido"),
+								Dni = reader.GetString("dni")
+							},
+							FechaInicio = reader.GetDateTime("fecha_inicio"),
+							FechaFin = reader.GetDateTime("fecha_fin"),
+							MontoMensual = reader.GetDecimal("monto_mensual"),
+							Activo = reader.GetBoolean("activo"),
+							Pagos = new List<Pago>()
+						};
+
+						do
+						{
+							if (!reader.IsDBNull(reader.GetOrdinal("id_pago")))
+							{
+								contrato.Pagos.Add(new Pago
+								{
+									IdPago = reader.GetInt32("id_pago"),
+									Numero = reader.GetInt32("numero"),
+									Fecha = reader.GetDateTime("fecha"),
+									Importe = reader.GetDecimal("importe")
+								});
+							}
+						} while (reader.Read());
+					}
+				}
+			}
+			connection.Close();
+		}
+		return contrato;
+	}
+
 	public List<int> GetContratosIdsPorInmueble(int idInmueble)
 	{
 		var result = new List<int>();

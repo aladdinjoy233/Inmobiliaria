@@ -32,5 +32,7 @@ public class Contrato
 	public decimal ? MontoMensual { get; set; }
 
 	public bool Activo { get; set; }
+
+	public List<Pago>? Pagos { get; set; }
 	
 }

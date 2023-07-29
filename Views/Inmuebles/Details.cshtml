@@ -90,7 +90,7 @@
 							@(contrato.FechaFin?.ToShortDateString())
 						</td>
 						<td>
-							$@Html.DisplayFor(model => model.Precio)
+							$@Html.DisplayFor(contrato => contrato.Precio)
 						</td>
 						<td>
 							<a href='@Url.Action("Details", "Inquilinos", new { id = contrato.InquilinoId })' class="btn btn-sm btn-link">

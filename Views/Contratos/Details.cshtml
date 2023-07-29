@@ -44,4 +44,54 @@
 		<strong>@Html.DisplayNameFor(model => model.MontoMensual): </strong>
 		$@Html.DisplayFor(model => model.MontoMensual)
 	</p>
+
+	@if(Model.Pagos != null && Model.Pagos.Count > 0)
+	{
+		<strong>Pagos del contrato:</strong>
+				<table class="table">
+			<thead>
+				<tr>
+					<th>
+						Numero de pago
+					</th>
+					<th>
+						Fecha
+					</th>
+					<th>
+						Importe
+					</th>
+					<th>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var pago in Model.Pagos)
+				{
+					<tr>
+						<td>
+							@(pago.Numero)
+						</td>
+						<td>
+							@(pago.Fecha.ToShortDateString())
+						</td>
+						<td>
+							$@(pago.Importe)
+						</td>
+						<td>
+							<a href='@Url.Action("Details", "Pagos", new { id = pago.IdPago })' class="btn btn-sm btn-light">
+								<i class="fa-solid fa-arrow-up-right-from-square"></i>
+							</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
+	else
+	{
+		<p><strong>No hay pagos para este contrato</strong></p>
+	}
+
+	<a asp-controller="Pagos" asp-action="Create" class="btn btn-sm btn-link">Agregar nuevo pago</a>
+
 </div>

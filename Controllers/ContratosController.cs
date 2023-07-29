@@ -64,7 +64,7 @@ namespace Inmobiliaria.Controllers
 		// GET: Contratos/Details/5
 		public ActionResult Details(int id)
 		{
-			var contrato = Repo.GetContratoPorId(id);
+			var contrato = Repo.GetDetalleContrato(id);
 			contrato.Inmueble = RepoInmueble.GetInmueblePorId(contrato.InmuebleId);
 			return View(contrato);
 		}
