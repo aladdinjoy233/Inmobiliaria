@@ -70,6 +70,9 @@
 						Fecha Fin
 					</th>
 					<th>
+						Monto Mensual
+					</th>
+					<th>
 						Inquilino
 					</th>
 					<th>
@@ -85,6 +88,9 @@
 						</td>
 						<td>
 							@(contrato.FechaFin?.ToShortDateString())
+						</td>
+						<td>
+							$@Html.DisplayFor(model => model.Precio)
 						</td>
 						<td>
 							<a href='@Url.Action("Details", "Inquilinos", new { id = contrato.InquilinoId })' class="btn btn-sm btn-link">

@@ -275,7 +275,7 @@ public class RepositorioInmueble
 		Inmueble? inmueble = null;
 		using (MySqlConnection connection = new MySqlConnection(connectionString))
 		{
-			var query = @"SELECT i.id_inmueble, i.id_propietario, direccion, uso, tipo, ambientes, latitud, longitud, precio, i.activo, p.nombre, p.apellido, p.dni, c.id_contrato, c.fecha_inicio, c.fecha_fin, c.id_inquilino, iq.nombre as iq_nombre, iq.apellido as iq_apellido
+			var query = @"SELECT i.id_inmueble, i.id_propietario, direccion, uso, tipo, ambientes, latitud, longitud, precio, i.activo, p.nombre, p.apellido, p.dni, c.id_contrato, c.fecha_inicio, c.fecha_fin, c.id_inquilino, c.monto_mensual, iq.nombre as iq_nombre, iq.apellido as iq_apellido
 			FROM inmuebles i
 			INNER JOIN propietarios p ON i.id_propietario = p.id_propietario
 			LEFT JOIN contratos c ON i.id_inmueble = c.id_inmueble
@@ -321,6 +321,7 @@ public class RepositorioInmueble
 									IdContrato = reader.GetInt32("id_contrato"),
 									FechaInicio = reader.GetDateTime("fecha_inicio"),
 									FechaFin = reader.GetDateTime("fecha_fin"),
+									MontoMensual = reader.GetDecimal("monto_mensual"),
 									InquilinoId = reader.GetInt32("id_inquilino"),
 									Inquilino = new Inquilino
 									{
