@@ -90,6 +90,14 @@ namespace Inmobiliaria.Controllers
 				return View(contrato);
 			}
 
+			if (contrato.FechaInicio >= contrato.FechaFin)
+			{
+				ViewBag.Error = "La fecha de inicio no puede ser mayor o igual a la fecha final";
+				ViewBag.Inmuebles = RepoInmueble.GetInmueblesParaAlquilar();
+				ViewBag.Inquilinos = RepoInquilino.GetInquilinos();
+				return View(contrato);
+			}
+
 			try
 			{
 				Repo.Alta(contrato);
@@ -133,6 +141,18 @@ namespace Inmobiliaria.Controllers
 				ViewBag.Inquilinos = RepoInquilino.GetInquilinos();
 				var lastContrato = Repo.GetContratoPorId(id);
 				ViewBag.InmuebleActual = RepoInmueble.GetInmueblePorId(lastContrato.InmuebleId);
+				return View(lastContrato);
+			}
+
+			if (contrato.FechaInicio >= contrato.FechaFin)
+			{
+				ViewBag.Error = "La fecha de inicio no puede ser mayor o igual a la fecha final";
+				ViewBag.Inmuebles = RepoInmueble.GetInmueblesParaAlquilar();
+				ViewBag.Inquilinos = RepoInquilino.GetInquilinos();
+
+				var lastContrato = Repo.GetContratoPorId(id);
+				ViewBag.InmuebleActual = RepoInmueble.GetInmueblePorId(lastContrato.InmuebleId);
+
 				return View(lastContrato);
 			}
 
@@ -260,6 +280,18 @@ namespace Inmobiliaria.Controllers
 
 				ViewBag.InmuebleActual = RepoInmueble.GetInmueblePorId(contratoDB.InmuebleId);
 				return View(contratoDB);
+			}
+
+			if (contrato.FechaInicio >= contrato.FechaFin)
+			{
+				ViewBag.Error = "La fecha de inicio no puede ser mayor o igual a la fecha final";
+				ViewBag.Inmuebles = RepoInmueble.GetInmueblesParaAlquilar();
+				ViewBag.Inquilinos = RepoInquilino.GetInquilinos();
+
+				var lastContrato = Repo.GetContratoPorId(id);
+				ViewBag.InmuebleActual = RepoInmueble.GetInmueblePorId(lastContrato.InmuebleId);
+
+				return View(lastContrato);
 			}
 
 			try
