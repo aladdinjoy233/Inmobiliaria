@@ -25,7 +25,27 @@ namespace Inmobiliaria.Controllers
 		public ActionResult Index()
 		{
 			ViewBag.Success = TempData["Success"];
+			ViewBag.Error = TempData["Error"];
 			var lista = Repo.GetInmuebles();
+			return View(lista);
+		}
+
+		// GET: Inmuebles/Search
+		public ActionResult Search(DateTime desde, DateTime hasta)
+		{
+			if (desde == DateTime.MinValue && hasta == DateTime.MinValue)
+			{
+				TempData["Error"] = "Tiene que ver por lo menos un campo completo";
+				return RedirectToAction("Index");
+			}
+
+			if (desde != DateTime.MinValue && hasta != DateTime.MinValue && desde > hasta)
+			{
+				TempData["Error"] = "La fecha inicial no puede ser mayor a la fecha final";
+				return RedirectToAction("Index");
+			}
+
+			var lista = Repo.GetInmueblesDesdeHasta(desde, hasta);
 			return View(lista);
 		}
 

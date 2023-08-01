@@ -5,23 +5,11 @@
 }
 
 <div class="d-flex align-items-center justify-content-between">
-	<h1>Inmuebles</h1>
+	<h1>Inmuebles disponibles por fecha</h1>
 	<div class="group">
-		<a asp-action="Available" class="btn btn-sm btn-link">Ver disponibles</a>
-		<a asp-action="Create" class="btn btn-sm btn-primary">Crear Nuevo</a>
+		<a asp-action="Index" class="btn btn-sm btn-link">Volver</a>
 	</div>
 </div>
-
-<p style="text-align: left; margin-bottom: .5rem;"><strong>Buscar inmuebles disponibles por fecha:</strong></p>
-<form id="dateForm" asp-controller="Inmuebles" asp-action="Search" method="get">
-	<label for="desde">Desde:</label>
-	<input type="date" id="desde" name="desde" class="form-control"/>
-
-	<label for="hasta">Hasta:</label>
-	<input type="date" id="hasta" name="hasta" class="form-control"/>
-
-	<button type="submit" class="btn btn-sm btn-primary"><i class="fa-solid fa-magnifying-glass"></i></button>
-</form>
 
 <table class="table">
 	<thead>

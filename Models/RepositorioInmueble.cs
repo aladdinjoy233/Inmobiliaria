@@ -132,6 +132,80 @@ public class RepositorioInmueble
 		return inmuebles;
 	}
 
+	public List<Inmueble> GetInmueblesDesdeHasta(DateTime? desde, DateTime? hasta)
+	{
+		List<Inmueble> inmuebles = new List<Inmueble>();
+		using (MySqlConnection connection = new MySqlConnection(connectionString))
+		{
+			var query = @"SELECT i.id_inmueble, i.id_propietario, direccion, uso, tipo, ambientes, latitud, longitud, precio, activo, p.nombre, p.apellido
+			FROM inmuebles i
+			INNER JOIN propietarios p ON i.id_propietario = p.id_propietario
+			WHERE NOT EXISTS (
+				SELECT 1
+				FROM contratos c
+				WHERE c.id_inmueble = i.id_inmueble
+				AND c.activo = 1 ";
+
+			if (desde != DateTime.MinValue && hasta != DateTime.MinValue) // Si estan ambos valores
+			{
+				query += "AND fecha_inicio <= @hasta AND fecha_fin >= @desde";
+			}
+			else if (desde != DateTime.MinValue && hasta == DateTime.MinValue) // Si esta solo el "desde"
+			{
+				query += "AND fecha_fin >= @desde";
+			}
+			else if (hasta != DateTime.MinValue && desde == DateTime.MinValue) // Si esta solo el "hasta"
+			{
+				query += "AND fecha_inicio <= @hasta";
+			}
+
+			query += ");";
+
+			using (var command = new MySqlCommand(query, connection))
+			{
+				if (desde.HasValue)
+				{
+					command.Parameters.AddWithValue("@desde", desde.Value);
+				}
+
+				if (hasta.HasValue)
+				{
+					command.Parameters.AddWithValue("@hasta", hasta.Value);
+				}
+
+				connection.Open();
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						Inmueble inmueble = new Inmueble
+						{
+							IdInmueble = reader.GetInt32("id_inmueble"),
+							PropietarioId = reader.GetInt32("id_propietario"),
+							Propietario = new Propietario
+							{
+								IdPropietario = reader.GetInt32("id_propietario"),
+								Nombre = reader.GetString("nombre"),
+								Apellido = reader.GetString("apellido")
+							},
+							Direccion = reader.GetString("direccion"),
+							Uso = reader.GetInt32("uso"),
+							Tipo = reader.GetInt32("tipo"),
+							Ambientes = reader.GetInt32("ambientes"),
+							Latitud = reader.GetDecimal("latitud"),
+							Longitud = reader.GetDecimal("longitud"),
+							Precio = reader.GetDecimal("precio"),
+							Activo = reader.GetBoolean("activo")
+						};
+						inmuebles.Add(inmueble);
+					}
+				}
+			}
+			connection.Close();
+		}
+		return inmuebles;
+	}
+
 	public List<Inmueble> GetDisponibles()
 	{
 		List<Inmueble> inmuebles = new List<Inmueble>();
